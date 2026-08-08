@@ -5,21 +5,12 @@ Semantic Versioning.
 
 ## [Unreleased]
 
-### Fixed
-
-- Use Graylog 7-compatible positional arguments for `parse_cef` and wait for
-  the installed UDP input before the Docker release gate replays fixtures.
-- Replace unsupported conditional expressions with signature-specific Graylog
-  rules and normalize RFC 3164 priority values in the live pipeline.
-- Attach the guarded pipeline to Graylog's default stream so input messages are
-  normalized on their initial processing pass.
-
 ### Planned
 
 - Real gateway fixtures and upgrade/failover/failback parsers.
 - Broader UniFi Network 10.x CEF event coverage.
 
-## [0.1.0] - 2026-08-08
+## [0.1.0] - 2026-08-09
 
 ### Added
 
@@ -29,3 +20,12 @@ Semantic Versioning.
 - Self-contained and assets-only content-pack variants.
 - Twelve sanitized parser-signature fixtures and regression tests.
 - Docker/Data Node release-gate scaffold and GitHub Actions workflows.
+
+### Fixed
+
+- Use Graylog 7-compatible positional arguments for `parse_cef` and wait for
+  the installed UDP input before the Docker release gate replays fixtures.
+- Replace unsupported conditional expressions with signature-specific Graylog
+  rules and normalize RFC 3164 priority values in the live pipeline.
+- Attach the guarded pipeline to Graylog's default stream so input messages are
+  normalized on their initial processing pass.
