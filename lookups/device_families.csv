@@ -1,0 +1,8 @@
+prefix,family,role
+UAP,unifi_access_point,access_point
+U6,unifi_access_point,access_point
+USW,unifi_switch,switch
+US,unifi_switch,switch
+UDM,unifi_gateway,gateway
+UXG,unifi_gateway,gateway
+UCG,unifi_gateway,gateway

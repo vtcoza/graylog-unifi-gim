@@ -1,0 +1,8 @@
+{
+  "unifi_log_format": "syslog",
+  "unifi_parse_status": "unsupported",
+  "event_source": "TEST-AP-03",
+  "host_device_model": "U6-Lite",
+  "process_name": "logread",
+  "process_pid": 3229
+}

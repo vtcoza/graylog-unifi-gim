@@ -1,0 +1,50 @@
+[
+  {
+    "id": "b5958cc2-b02a-56fa-9f2d-1936eef95dac",
+    "title": "UniFi - Device reboot",
+    "description": "A UniFi device reported a reboot command.",
+    "query": "unifi_event_type:\"device.reboot\"",
+    "search_within_ms": 60000,
+    "execute_every_ms": 60000,
+    "group_by": ["host_name"],
+    "threshold": 1,
+    "priority": 2,
+    "enabled": false
+  },
+  {
+    "id": "19a398fa-6e6b-5904-b0d4-8890eadfc014",
+    "title": "UniFi - Wireless mesh timeout",
+    "description": "A UniFi access point reported that its mesh halt timer expired.",
+    "query": "unifi_event_type:\"wireless.mesh.timeout\"",
+    "search_within_ms": 300000,
+    "execute_every_ms": 60000,
+    "group_by": ["host_name"],
+    "threshold": 1,
+    "priority": 2,
+    "enabled": false
+  },
+  {
+    "id": "4f42b078-b60e-5099-955f-91f3458cbb49",
+    "title": "UniFi - Port flapping",
+    "description": "Four or more link state transitions on one switch port in five minutes.",
+    "query": "unifi_event_type:(\"network.port.up\" OR \"network.port.down\")",
+    "search_within_ms": 300000,
+    "execute_every_ms": 60000,
+    "group_by": ["host_name", "unifi_switch_port"],
+    "threshold": 4,
+    "priority": 2,
+    "enabled": false
+  },
+  {
+    "id": "522580ae-3efe-5d0e-bae5-41b1afbe2e4b",
+    "title": "UniFi - Repeated client disconnects",
+    "description": "Five or more disconnect messages for one client in ten minutes.",
+    "query": "unifi_event_type:\"network.client.disconnected\"",
+    "search_within_ms": 600000,
+    "execute_every_ms": 60000,
+    "group_by": ["source_mac"],
+    "threshold": 5,
+    "priority": 1,
+    "enabled": false
+  }
+]

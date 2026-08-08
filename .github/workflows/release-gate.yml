@@ -1,0 +1,39 @@
+name: Graylog 7.1 release gate
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  graylog-import-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e ".[test]"
+      - name: Configure Data Node host requirements
+        run: sudo sysctl -w vm.max_map_count=262144
+      - name: Start Graylog Open 7.1.5 stack
+        run: docker compose --env-file docker/.env.example -f docker/docker-compose.yml up -d
+      - name: Import and replay self-contained pack
+        run: python scripts/graylog_release_gate.py --variant with-input --timeout 900
+      - name: Unit and artifact regression
+        run: python -m pytest
+      - name: Container logs
+        if: always()
+        run: docker compose --env-file docker/.env.example -f docker/docker-compose.yml logs --no-color
+      - name: Stop test stack
+        if: always()
+        run: docker compose --env-file docker/.env.example -f docker/docker-compose.yml down -v
+      - uses: actions/upload-artifact@v4
+        with:
+          name: graylog-unifi-gim-content-packs
+          path: content-pack/*.json
+

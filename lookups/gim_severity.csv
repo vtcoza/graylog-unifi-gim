@@ -1,0 +1,7 @@
+unifi_severity,event_severity,event_severity_level
+debug,informational,1
+info,informational,1
+notice,low,2
+warning,medium,3
+error,high,4
+critical,critical,5

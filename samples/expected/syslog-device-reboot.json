@@ -1,0 +1,9 @@
+{
+  "unifi_parse_status": "parsed",
+  "event_action": "reboot",
+  "unifi_event_type": "device.reboot",
+  "host_name": "TEST-AP-03",
+  "host_device_model": "U6-Lite",
+  "process_name": "mcad",
+  "process_pid": 3244
+}

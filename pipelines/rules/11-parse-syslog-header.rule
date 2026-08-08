@@ -1,0 +1,18 @@
+rule "UniFi - parse device syslog header"
+when
+  has_field("unifi_log_format") && to_string($message.unifi_log_format) == "syslog"
+then
+  let header = grok(
+    pattern: "%{UNIFI_DEVICE_HEADER}",
+    value: to_string($message.message),
+    only_named_captures: true
+  );
+  set_fields(header);
+  set_field("event_source_product", "unifi_device");
+  set_field("event_source", to_string(header["host_name"]));
+  set_field("host_mac", to_string(header["unifi_device_mac"]));
+  set_field("host_device_vendor", "Ubiquiti");
+  set_field("host_device_model", to_string(header["unifi_device_model"]));
+  set_field("host_os_version", to_string(header["unifi_device_version"]));
+  set_field("unifi_parse_status", "unsupported");
+end

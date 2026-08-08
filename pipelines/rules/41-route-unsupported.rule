@@ -1,0 +1,6 @@
+rule "UniFi - route unsupported messages"
+when
+  has_field("unifi_parse_status") && to_string($message.unifi_parse_status) != "parsed"
+then
+  route_to_stream(name: "UniFi - Unsupported", remove_from_default: false);
+end

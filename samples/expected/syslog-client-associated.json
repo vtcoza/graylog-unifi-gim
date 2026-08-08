@@ -1,0 +1,11 @@
+{
+  "unifi_parse_status": "parsed",
+  "event_action": "connected",
+  "unifi_event_type": "network.client.connected",
+  "source_mac": "02:00:00:00:00:20",
+  "destination_mac": "02:00:00:00:00:30",
+  "destination_hostname": "TEST-AP-01",
+  "unifi_wlan_interface": "ra1",
+  "process_pid": 32302,
+  "gim_event_type_code": 129999
+}

@@ -1,0 +1,1 @@
+%{NOTSPACE:host_name} %{UNIFI_MAC12:unifi_device_mac},%{GREEDYDATA:unifi_device_model}-%{UNIFI_VERSION:unifi_device_version}: %{GREEDYDATA:unifi_vendor_message}

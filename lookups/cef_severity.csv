@@ -1,0 +1,12 @@
+key,unifi_severity
+0,debug
+1,info
+2,info
+3,info
+4,notice
+5,warning
+6,warning
+7,error
+8,error
+9,critical
+10,critical

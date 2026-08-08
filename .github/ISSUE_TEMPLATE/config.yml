@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sensitive report
+    url: https://github.com/vtcoza/graylog-unifi-gim/security
+    about: Do not place production identifiers in a public issue.
+

@@ -1,0 +1,20 @@
+{
+  "unifi_log_format": "cef",
+  "unifi_parse_status": "parsed",
+  "UNIFIclientIp": "192.0.2.20",
+  "event_code": 403,
+  "event_action": "connected",
+  "unifi_event_type": "network.client.connected",
+  "source_ip": "192.0.2.20",
+  "source_mac": "02:00:00:00:00:20",
+  "source_hostname": "Lab Printer",
+  "destination_hostname": "TEST-SWITCH-01",
+  "destination_ip": "192.0.2.10",
+  "destination_mac": "02:00:00:00:00:10",
+  "network_name": "TEST LAN",
+  "network_vlan": 42,
+  "unifi_switch_port": 19,
+  "event_severity": "informational",
+  "event_severity_level": 1,
+  "gim_event_type_code": 129999
+}

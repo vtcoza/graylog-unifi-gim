@@ -1,0 +1,6 @@
+rule "UniFi - route syslog messages"
+when
+  has_field("unifi_log_format") && to_string($message.unifi_log_format) == "syslog"
+then
+  route_to_stream(name: "UniFi - Syslog", remove_from_default: false);
+end

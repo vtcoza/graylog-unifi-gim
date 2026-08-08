@@ -1,0 +1,8 @@
+{
+  "unifi_parse_status": "parsed",
+  "event_action": "forwarding",
+  "unifi_event_type": "network.port.forwarding",
+  "unifi_switch_port": 27,
+  "unifi_switch_previous_state": "blocking",
+  "unifi_switch_state": "forwarding"
+}

@@ -1,0 +1,45 @@
+[
+  {
+    "id": "78261a1d-0113-5fad-8385-0ca42baf9188",
+    "title": "UniFi - Raw",
+    "description": "Entry stream for messages from an input with unifi_ingest=true.",
+    "matching_type": "AND",
+    "remove_matches": false,
+    "rules": [{"field": "unifi_ingest", "type": "EXACT", "value": "true", "inverted": false}]
+  },
+  {
+    "id": "0a57ef15-0a43-565e-b927-1109b7df1d29",
+    "title": "UniFi - Parsed",
+    "description": "All messages handled by the UniFi GIM pipeline.",
+    "matching_type": "AND",
+    "remove_matches": false,
+    "rules": [{"field": "unifi_parse_status", "type": "PRESENCE", "value": "", "inverted": false}]
+  },
+  {
+    "id": "75f814eb-127e-55e9-9e05-a10745782c23",
+    "title": "UniFi - Unsupported",
+    "description": "Recognized UniFi envelopes without a supported message signature, plus malformed input.",
+    "matching_type": "OR",
+    "remove_matches": false,
+    "rules": [
+      {"field": "unifi_parse_status", "type": "EXACT", "value": "unsupported", "inverted": false},
+      {"field": "unifi_parse_status", "type": "EXACT", "value": "malformed", "inverted": false}
+    ]
+  },
+  {
+    "id": "1c394133-e9c2-5219-89e9-282b3e3f62d6",
+    "title": "UniFi - CEF",
+    "description": "UniFi Network CEF messages.",
+    "matching_type": "AND",
+    "remove_matches": false,
+    "rules": [{"field": "unifi_log_format", "type": "EXACT", "value": "cef", "inverted": false}]
+  },
+  {
+    "id": "b75b8d50-f57c-5d07-bbe2-f26497933310",
+    "title": "UniFi - Syslog",
+    "description": "UniFi AP, switch, and gateway device syslog messages.",
+    "matching_type": "AND",
+    "remove_matches": false,
+    "rules": [{"field": "unifi_log_format", "type": "EXACT", "value": "syslog", "inverted": false}]
+  }
+]

@@ -1,0 +1,25 @@
+rule "UniFi - normalize CEF client events"
+when
+  has_field("unifi_log_format") && to_string($message.unifi_log_format) == "cef"
+then
+  set_field("event_observer_hostname", to_string($message.UNIFIhost));
+  set_field("event_reporter", to_string($message.UNIFIhost));
+  set_field("event_source", to_string($message.UNIFIhost));
+  set_field("unifi_site_code", to_string($message.UNIFIsite));
+  set_field("source_ip", to_ip($message.UNIFIclientIp));
+  set_field("source_mac", lowercase(to_string($message.UNIFIclientMac)));
+  set_field("network_name", to_string($message.UNIFInetworkName));
+  set_field("network_cidr", to_string($message.UNIFInetworkSubnet));
+  set_field("network_vlan", to_long($message.UNIFInetworkVlan));
+  set_field("gim_event_type_code", 129999);
+  set_field("gim_event_category", "network");
+  set_field("gim_event_subcategory", "network.default");
+  set_field("gim_event_type", "network message");
+  let connected = to_string($message.device_event_class_id) == "403";
+  let disconnected = to_string($message.device_event_class_id) == "404";
+  set_field("event_action", if(connected, "connected", if(disconnected, "disconnected", "unknown")));
+  set_field("unifi_event_type", if(connected, "network.client.connected", if(disconnected, "network.client.disconnected", "unknown")));
+  set_field("event_code", to_long($message.device_event_class_id));
+  set_field("event_id", to_string($message.device_event_class_id));
+  set_field("unifi_severity", lookup_value("unifi_cef_severity", to_string($message.severity)));
+end

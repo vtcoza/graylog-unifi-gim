@@ -1,0 +1,11 @@
+{
+  "unifi_parse_status": "parsed",
+  "event_action": "down",
+  "unifi_event_type": "network.port.down",
+  "unifi_syslog_priority": 132,
+  "unifi_syslog_facility": 16,
+  "unifi_syslog_severity_code": 4,
+  "unifi_severity": "warning",
+  "event_severity": "medium",
+  "event_severity_level": 3
+}

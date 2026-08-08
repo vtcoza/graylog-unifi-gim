@@ -1,0 +1,21 @@
+rule "UniFi - normalize device syslog families"
+when
+  has_field("unifi_vendor_message")
+then
+  let text = to_string($message.unifi_vendor_message);
+  let link = regex(pattern: "Port (?<port>\\d+) link (?<state>up|down)$", value: text);
+  let stp = regex(pattern: "Port (?<port>\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$", value: text);
+  let wlan = regex(pattern: "(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\.11: (?<state>associated|disassociated)$", value: text);
+  let mesh = contains(value: text, search: "ace_reporter.mesh_halt_timeout(): Mesh halt expired");
+  let reboot = contains(value: text, search: "ace_reporter.reporter_handle_response_json(): [reboot] reboot");
+  let known = link.matches || stp.matches || wlan.matches || mesh || reboot;
+  set_field("unifi_parse_status", if(known, "parsed", "unsupported"));
+  set_field("unifi_switch_port", if(link.matches, to_long(link["port"]), if(stp.matches, to_long(stp["port"]), 0)));
+  set_field("source_mac", if(wlan.matches, lowercase(to_string(wlan["client"])), ""));
+  set_field("destination_mac", if(wlan.matches, lowercase(to_string($message.host_mac)), ""));
+  set_field("destination_hostname", if(wlan.matches, to_string($message.host_name), ""));
+  set_field("unifi_wlan_interface", if(wlan.matches, to_string(wlan["interface"]), ""));
+  set_field("unifi_mesh_timeout", mesh);
+  set_field("event_action", if(link.matches, lowercase(to_string(link["state"])), if(stp.matches, lowercase(to_string(stp["state"])), if(wlan.matches, if(to_string(wlan["state"]) == "associated", "connected", "disconnected"), if(mesh, "timeout", if(reboot, "reboot", "unknown"))))));
+  set_field("unifi_event_type", if(link.matches, concat("network.port.", lowercase(to_string(link["state"]))), if(stp.matches, concat("network.port.", lowercase(to_string(stp["state"]))), if(wlan.matches, if(to_string(wlan["state"]) == "associated", "network.client.connected", "network.client.disconnected"), if(mesh, "wireless.mesh.timeout", if(reboot, "device.reboot", "unknown"))))));
+end

@@ -1,0 +1,10 @@
+rule "UniFi - normalize severity to GIM"
+when
+  has_field("unifi_severity")
+then
+  let level = lookup_value("unifi_gim_severity_level", to_string($message.unifi_severity));
+  let name = lookup_value("unifi_gim_severity", to_string($message.unifi_severity));
+  set_field("vendor_event_severity", to_string($message.unifi_severity));
+  set_field("event_severity", to_string(name));
+  set_field("event_severity_level", to_long(level));
+end

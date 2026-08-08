@@ -1,0 +1,6 @@
+rule "UniFi - route normalized messages"
+when
+  has_field("unifi_ingest") && to_bool($message.unifi_ingest)
+then
+  route_to_stream(name: "UniFi - Parsed", remove_from_default: false);
+end

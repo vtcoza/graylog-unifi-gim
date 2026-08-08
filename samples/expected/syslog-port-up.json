@@ -1,0 +1,11 @@
+{
+  "unifi_log_format": "syslog",
+  "unifi_parse_status": "parsed",
+  "host_name": "TEST-SWITCH-01",
+  "host_mac": "02:00:00:00:00:10",
+  "host_device_model": "USW-48-PoE",
+  "process_name": "kernel",
+  "event_action": "up",
+  "unifi_event_type": "network.port.up",
+  "unifi_switch_port": 27
+}

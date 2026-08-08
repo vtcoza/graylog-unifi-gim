@@ -1,0 +1,21 @@
+{
+  "repository": "vtcoza/graylog-unifi-gim",
+  "visibility": "public",
+  "project": "Graylog UniFi GIM",
+  "milestones": [
+    {"title": "1 - Project scaffolding", "description": "Repository structure, GPL-3.0, CI, contribution and architecture documentation."},
+    {"title": "2 - Golden dataset", "description": "Sanitized raw parser signatures categorized by device, format, and firmware."},
+    {"title": "3 - Parser implementation", "description": "CEF and syslog pipeline rules with fixture regression coverage."},
+    {"title": "4 - GIM normalization", "description": "Official field mappings, severity, schema validation, and vendor extensions."},
+    {"title": "5 - Graylog assets", "description": "Streams, lookups, disabled events, dashboards, and Docker import/replay gate."},
+    {"title": "6 - Marketplace release", "description": "Versioned dual packs, installation guide, release notes, and Marketplace submission."}
+  ],
+  "labels": ["parser", "fixture", "gim", "graylog-asset", "documentation", "coverage-gap", "bug"],
+  "initial_issues": [
+    {"title": "Collect sanitized gateway syslog fixtures", "milestone": "2 - Golden dataset", "labels": ["fixture", "coverage-gap"]},
+    {"title": "Collect upgrade event fixtures", "milestone": "2 - Golden dataset", "labels": ["fixture", "coverage-gap"]},
+    {"title": "Add gateway failover/failback normalization", "milestone": "3 - Parser implementation", "labels": ["parser", "coverage-gap"]},
+    {"title": "Run and certify Graylog 7.1.5 release gate", "milestone": "6 - Marketplace release", "labels": ["graylog-asset"]}
+  ]
+}
+

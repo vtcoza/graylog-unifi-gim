@@ -1,0 +1,8 @@
+{
+  "unifi_parse_status": "parsed",
+  "event_action": "timeout",
+  "unifi_event_type": "wireless.mesh.timeout",
+  "unifi_mesh_state": "halted",
+  "unifi_mesh_timeout": true,
+  "host_name": "TEST-AP-01"
+}

@@ -1,0 +1,2189 @@
+{
+  "v": 1,
+  "id": "be8c8625-e256-539a-8809-13040a73307a",
+  "rev": 1,
+  "name": "Graylog UniFi GIM 0.1 (with-input)",
+  "summary": "Mixed UniFi OS CEF/syslog ingestion normalized to the Graylog Information Model.",
+  "description": "Evidence-gated UniFi integration for Graylog Open 7.1. Install only one variant. Lookup CSV files must be mounted as documented. Event definitions install disabled.",
+  "vendor": "Graylog UniFi GIM community",
+  "url": "https://github.com/vtcoza/graylog-unifi-gim",
+  "parameters": [
+    {
+      "name": "udp_bind_address",
+      "title": "UDP bind address",
+      "description": "Address used by the global Raw/Plaintext UDP input.",
+      "type": "string",
+      "default_value": "0.0.0.0"
+    },
+    {
+      "name": "udp_port",
+      "title": "UDP port",
+      "description": "Port receiving mixed UniFi CEF and syslog messages.",
+      "type": "integer",
+      "default_value": 1515
+    }
+  ],
+  "entities": [
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "0fd1e7df-a26f-5295-ad2d-c84323a040ab",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Parser Health"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Parsing status, unsupported signatures, and malformed messages."
+        },
+        "definition": {
+          "@type": "string",
+          "@value": "{\"description\":\"Parsing status, unsupported signatures, and malformed messages.\",\"id\":\"0fd1e7df-a26f-5295-ad2d-c84323a040ab\",\"title\":\"UniFi - Parser Health\",\"widgets\":[{\"group_by\":\"unifi_parse_status\",\"query\":\"exists:unifi_parse_status\",\"title\":\"Parse status\",\"type\":\"aggregation\"},{\"query\":\"unifi_parse_status:(unsupported OR malformed)\",\"title\":\"Unsupported messages\",\"type\":\"messages\"},{\"group_by\":\"unifi_device_version\",\"query\":\"exists:unifi_device_version\",\"title\":\"Firmware coverage\",\"type\":\"aggregation\"}]}"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "26b25666-0454-53ab-9531-fe2aa2364f47",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Client Activity"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Client connections and disconnects by client, network, and attachment device."
+        },
+        "definition": {
+          "@type": "string",
+          "@value": "{\"description\":\"Client connections and disconnects by client, network, and attachment device.\",\"id\":\"26b25666-0454-53ab-9531-fe2aa2364f47\",\"title\":\"UniFi - Client Activity\",\"widgets\":[{\"group_by\":\"event_action\",\"query\":\"unifi_event_type:network.client.*\",\"title\":\"Connect vs disconnect\",\"type\":\"aggregation\"},{\"group_by\":\"source_mac\",\"query\":\"exists:source_mac\",\"title\":\"Clients\",\"type\":\"aggregation\"},{\"group_by\":\"network_name\",\"query\":\"exists:network_name\",\"title\":\"Networks\",\"type\":\"aggregation\"}]}"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "67d9dc43-b498-57d2-8790-c4ac75396cb6",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Overview"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Volume, severity, format, device model, and normalized event activity."
+        },
+        "definition": {
+          "@type": "string",
+          "@value": "{\"description\":\"Volume, severity, format, device model, and normalized event activity.\",\"id\":\"67d9dc43-b498-57d2-8790-c4ac75396cb6\",\"title\":\"UniFi - Overview\",\"widgets\":[{\"query\":\"exists:unifi_parse_status\",\"title\":\"Messages\",\"type\":\"count\"},{\"group_by\":\"unifi_event_type\",\"query\":\"exists:unifi_event_type\",\"title\":\"Events by type\",\"type\":\"aggregation\"},{\"group_by\":\"host_name\",\"query\":\"exists:host_name\",\"title\":\"Devices\",\"type\":\"aggregation\"},{\"group_by\":\"event_severity\",\"query\":\"exists:event_severity\",\"title\":\"Severity\",\"type\":\"aggregation\"}]}"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "98290735-9964-57ea-844a-c07d077c2741",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Switch Health"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Port link and spanning-tree state transitions."
+        },
+        "definition": {
+          "@type": "string",
+          "@value": "{\"description\":\"Port link and spanning-tree state transitions.\",\"id\":\"98290735-9964-57ea-844a-c07d077c2741\",\"title\":\"UniFi - Switch Health\",\"widgets\":[{\"group_by\":\"unifi_event_type\",\"query\":\"unifi_event_type:network.port.*\",\"title\":\"Port transitions\",\"type\":\"aggregation\"},{\"group_by\":\"host_name,unifi_switch_port\",\"query\":\"exists:unifi_switch_port\",\"title\":\"Noisiest ports\",\"type\":\"aggregation\"}]}"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "event_definition",
+        "version": "1"
+      },
+      "id": "19a398fa-6e6b-5904-b0d4-8890eadfc014",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Wireless mesh timeout"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "A UniFi access point reported that its mesh halt timer expired."
+        },
+        "priority": {
+          "@type": "integer",
+          "@value": 2
+        },
+        "alert": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "config": {
+          "type": {
+            "@type": "string",
+            "@value": "aggregation-v1"
+          },
+          "query": {
+            "@type": "string",
+            "@value": "unifi_event_type:\"wireless.mesh.timeout\""
+          },
+          "query_parameters": [],
+          "streams": [
+            {
+              "@type": "string",
+              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
+            }
+          ],
+          "group_by": [
+            {
+              "@type": "string",
+              "@value": "host_name"
+            }
+          ],
+          "series": [
+            {
+              "id": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "function": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "field": {
+                "@type": "string",
+                "@value": ""
+              }
+            }
+          ],
+          "conditions": {
+            "expression": {
+              "expr": {
+                "@type": "string",
+                "@value": ">="
+              },
+              "left": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number-ref"
+                },
+                "ref": {
+                  "@type": "string",
+                  "@value": "count"
+                }
+              },
+              "right": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number"
+                },
+                "value": {
+                  "@type": "double",
+                  "@value": 1
+                }
+              }
+            }
+          },
+          "search_within_ms": {
+            "@type": "long",
+            "@value": 300000
+          },
+          "execute_every_ms": {
+            "@type": "long",
+            "@value": 60000
+          }
+        },
+        "field_spec": {},
+        "key_spec": [],
+        "notification_settings": {
+          "grace_period_ms": {
+            "@type": "long",
+            "@value": 0
+          },
+          "backlog_size": {
+            "@type": "integer",
+            "@value": 0
+          }
+        },
+        "notifications": [],
+        "remediation_steps": {
+          "@type": "string",
+          "@value": "Review the source message and affected UniFi device."
+        },
+        "storage": [],
+        "enabled": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "event_definition",
+        "version": "1"
+      },
+      "id": "4f42b078-b60e-5099-955f-91f3458cbb49",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Port flapping"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Four or more link state transitions on one switch port in five minutes."
+        },
+        "priority": {
+          "@type": "integer",
+          "@value": 2
+        },
+        "alert": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "config": {
+          "type": {
+            "@type": "string",
+            "@value": "aggregation-v1"
+          },
+          "query": {
+            "@type": "string",
+            "@value": "unifi_event_type:(\"network.port.up\" OR \"network.port.down\")"
+          },
+          "query_parameters": [],
+          "streams": [
+            {
+              "@type": "string",
+              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
+            }
+          ],
+          "group_by": [
+            {
+              "@type": "string",
+              "@value": "host_name"
+            },
+            {
+              "@type": "string",
+              "@value": "unifi_switch_port"
+            }
+          ],
+          "series": [
+            {
+              "id": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "function": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "field": {
+                "@type": "string",
+                "@value": ""
+              }
+            }
+          ],
+          "conditions": {
+            "expression": {
+              "expr": {
+                "@type": "string",
+                "@value": ">="
+              },
+              "left": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number-ref"
+                },
+                "ref": {
+                  "@type": "string",
+                  "@value": "count"
+                }
+              },
+              "right": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number"
+                },
+                "value": {
+                  "@type": "double",
+                  "@value": 4
+                }
+              }
+            }
+          },
+          "search_within_ms": {
+            "@type": "long",
+            "@value": 300000
+          },
+          "execute_every_ms": {
+            "@type": "long",
+            "@value": 60000
+          }
+        },
+        "field_spec": {},
+        "key_spec": [],
+        "notification_settings": {
+          "grace_period_ms": {
+            "@type": "long",
+            "@value": 0
+          },
+          "backlog_size": {
+            "@type": "integer",
+            "@value": 0
+          }
+        },
+        "notifications": [],
+        "remediation_steps": {
+          "@type": "string",
+          "@value": "Review the source message and affected UniFi device."
+        },
+        "storage": [],
+        "enabled": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "event_definition",
+        "version": "1"
+      },
+      "id": "522580ae-3efe-5d0e-bae5-41b1afbe2e4b",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Repeated client disconnects"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Five or more disconnect messages for one client in ten minutes."
+        },
+        "priority": {
+          "@type": "integer",
+          "@value": 1
+        },
+        "alert": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "config": {
+          "type": {
+            "@type": "string",
+            "@value": "aggregation-v1"
+          },
+          "query": {
+            "@type": "string",
+            "@value": "unifi_event_type:\"network.client.disconnected\""
+          },
+          "query_parameters": [],
+          "streams": [
+            {
+              "@type": "string",
+              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
+            }
+          ],
+          "group_by": [
+            {
+              "@type": "string",
+              "@value": "source_mac"
+            }
+          ],
+          "series": [
+            {
+              "id": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "function": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "field": {
+                "@type": "string",
+                "@value": ""
+              }
+            }
+          ],
+          "conditions": {
+            "expression": {
+              "expr": {
+                "@type": "string",
+                "@value": ">="
+              },
+              "left": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number-ref"
+                },
+                "ref": {
+                  "@type": "string",
+                  "@value": "count"
+                }
+              },
+              "right": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number"
+                },
+                "value": {
+                  "@type": "double",
+                  "@value": 5
+                }
+              }
+            }
+          },
+          "search_within_ms": {
+            "@type": "long",
+            "@value": 600000
+          },
+          "execute_every_ms": {
+            "@type": "long",
+            "@value": 60000
+          }
+        },
+        "field_spec": {},
+        "key_spec": [],
+        "notification_settings": {
+          "grace_period_ms": {
+            "@type": "long",
+            "@value": 0
+          },
+          "backlog_size": {
+            "@type": "integer",
+            "@value": 0
+          }
+        },
+        "notifications": [],
+        "remediation_steps": {
+          "@type": "string",
+          "@value": "Review the source message and affected UniFi device."
+        },
+        "storage": [],
+        "enabled": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "event_definition",
+        "version": "1"
+      },
+      "id": "b5958cc2-b02a-56fa-9f2d-1936eef95dac",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Device reboot"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "A UniFi device reported a reboot command."
+        },
+        "priority": {
+          "@type": "integer",
+          "@value": 2
+        },
+        "alert": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "config": {
+          "type": {
+            "@type": "string",
+            "@value": "aggregation-v1"
+          },
+          "query": {
+            "@type": "string",
+            "@value": "unifi_event_type:\"device.reboot\""
+          },
+          "query_parameters": [],
+          "streams": [
+            {
+              "@type": "string",
+              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
+            }
+          ],
+          "group_by": [
+            {
+              "@type": "string",
+              "@value": "host_name"
+            }
+          ],
+          "series": [
+            {
+              "id": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "function": {
+                "@type": "string",
+                "@value": "count"
+              },
+              "field": {
+                "@type": "string",
+                "@value": ""
+              }
+            }
+          ],
+          "conditions": {
+            "expression": {
+              "expr": {
+                "@type": "string",
+                "@value": ">="
+              },
+              "left": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number-ref"
+                },
+                "ref": {
+                  "@type": "string",
+                  "@value": "count"
+                }
+              },
+              "right": {
+                "expr": {
+                  "@type": "string",
+                  "@value": "number"
+                },
+                "value": {
+                  "@type": "double",
+                  "@value": 1
+                }
+              }
+            }
+          },
+          "search_within_ms": {
+            "@type": "long",
+            "@value": 60000
+          },
+          "execute_every_ms": {
+            "@type": "long",
+            "@value": 60000
+          }
+        },
+        "field_spec": {},
+        "key_spec": [],
+        "notification_settings": {
+          "grace_period_ms": {
+            "@type": "long",
+            "@value": 0
+          },
+          "backlog_size": {
+            "@type": "integer",
+            "@value": 0
+          }
+        },
+        "notifications": [],
+        "remediation_steps": {
+          "@type": "string",
+          "@value": "Review the source message and affected UniFi device."
+        },
+        "storage": [],
+        "enabled": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "8224fc48-f00f-5085-9de6-80a7f808101f",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "UNIFI_DEVICE_HEADER"
+        },
+        "pattern": {
+          "@type": "string",
+          "@value": "%{NOTSPACE:host_name} %{UNIFI_MAC12:unifi_device_mac},%{GREEDYDATA:unifi_device_model}-%{UNIFI_VERSION:unifi_device_version}: %{GREEDYDATA:unifi_vendor_message}"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "979de00f-f83f-5374-836b-d9c4ed6747df",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "UNIFI_MAC12"
+        },
+        "pattern": {
+          "@type": "string",
+          "@value": "[0-9A-Fa-f]{12}"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "e3ff70a7-4082-5568-876b-2e9fe0c3b7b9",
+      "data": {
+        "name": {
+          "@type": "string",
+          "@value": "UNIFI_VERSION"
+        },
+        "pattern": {
+          "@type": "string",
+          "@value": "\\d+\\.\\d+\\.\\d+\\+\\d+"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "dc8d230e-3c1c-54fe-84fa-65da1dc6212b",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Mixed Raw UDP"
+        },
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.raw.udp.RawUDPInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": true
+        },
+        "configuration": {
+          "bind_address": {
+            "@type": "parameter",
+            "@value": "udp_bind_address"
+          },
+          "port": {
+            "@type": "parameter",
+            "@value": "udp_port"
+          },
+          "recv_buffer_size": {
+            "@type": "integer",
+            "@value": 1048576
+          },
+          "number_worker_threads": {
+            "@type": "integer",
+            "@value": 2
+          },
+          "override_source": {
+            "@type": "string",
+            "@value": ""
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          },
+          "static_fields": {
+            "unifi_ingest": {
+              "@type": "string",
+              "@value": "true"
+            }
+          }
+        },
+        "static_fields": {
+          "unifi_ingest": {
+            "@type": "string",
+            "@value": "true"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "00cc19f7-249a-58fb-af7f-8c006cd7734d",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_gim_severity-adapter"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_gim_severity adapter"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "CSV data mounted read-only from the content-pack repository."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "csvfile"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/usr/share/graylog/data/unifi-gim/gim_severity.csv"
+          },
+          "separator": {
+            "@type": "string",
+            "@value": ","
+          },
+          "quotechar": {
+            "@type": "string",
+            "@value": "\""
+          },
+          "key_column": {
+            "@type": "string",
+            "@value": "unifi_severity"
+          },
+          "value_column": {
+            "@type": "string",
+            "@value": "event_severity"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 60
+          },
+          "case_insensitive_lookup": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "1b7960c9-e708-532e-b7dd-ed44096289b4",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_gim_severity_level-adapter"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_gim_severity_level adapter"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "CSV data mounted read-only from the content-pack repository."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "csvfile"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/usr/share/graylog/data/unifi-gim/gim_severity.csv"
+          },
+          "separator": {
+            "@type": "string",
+            "@value": ","
+          },
+          "quotechar": {
+            "@type": "string",
+            "@value": "\""
+          },
+          "key_column": {
+            "@type": "string",
+            "@value": "unifi_severity"
+          },
+          "value_column": {
+            "@type": "string",
+            "@value": "event_severity_level"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 60
+          },
+          "case_insensitive_lookup": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "3ac56df3-be78-5644-b451-6d549481ee59",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_cef_event_type-adapter"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_cef_event_type adapter"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "CSV data mounted read-only from the content-pack repository."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "csvfile"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/usr/share/graylog/data/unifi-gim/cef_events.csv"
+          },
+          "separator": {
+            "@type": "string",
+            "@value": ","
+          },
+          "quotechar": {
+            "@type": "string",
+            "@value": "\""
+          },
+          "key_column": {
+            "@type": "string",
+            "@value": "code"
+          },
+          "value_column": {
+            "@type": "string",
+            "@value": "unifi_event_type"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 60
+          },
+          "case_insensitive_lookup": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "6e35d861-2459-5d9f-9858-e93ba314dffa",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_cef_severity-adapter"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_cef_severity adapter"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "CSV data mounted read-only from the content-pack repository."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "csvfile"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/usr/share/graylog/data/unifi-gim/cef_severity.csv"
+          },
+          "separator": {
+            "@type": "string",
+            "@value": ","
+          },
+          "quotechar": {
+            "@type": "string",
+            "@value": "\""
+          },
+          "key_column": {
+            "@type": "string",
+            "@value": "key"
+          },
+          "value_column": {
+            "@type": "string",
+            "@value": "unifi_severity"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 60
+          },
+          "case_insensitive_lookup": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "2e3a9edc-b3b1-53ea-b0dc-d5bab19855bc",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_cef_event_type-cache"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_cef_event_type cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "In-memory cache for UniFi normalization data."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 0
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 60
+          },
+          "expire_after_write_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "8212e237-cff4-50a3-9d5f-1c2518d232e8",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_gim_severity_level-cache"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_gim_severity_level cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "In-memory cache for UniFi normalization data."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 0
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 60
+          },
+          "expire_after_write_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "95a56440-b5f7-5a95-9f36-115ced829a87",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_cef_severity-cache"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_cef_severity cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "In-memory cache for UniFi normalization data."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 0
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 60
+          },
+          "expire_after_write_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "f0324e45-081a-5d48-afd5-f8c3257308bd",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_gim_severity-cache"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_gim_severity cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "In-memory cache for UniFi normalization data."
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 0
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 60
+          },
+          "expire_after_write_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "3336704e-8f35-5b11-904f-dc8254813d42",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_gim_severity"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_gim_severity"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "UniFi GIM normalization lookup."
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "STRING"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "00cc19f7-249a-58fb-af7f-8c006cd7734d"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "f0324e45-081a-5d48-afd5-f8c3257308bd"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "3747d223-3aad-580c-89bb-a9d50183c5c1",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_cef_severity"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_cef_severity"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "UniFi GIM normalization lookup."
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "STRING"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "6e35d861-2459-5d9f-9858-e93ba314dffa"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "95a56440-b5f7-5a95-9f36-115ced829a87"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "548aebd2-94f4-5b99-8a8d-112f01a90639",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_cef_event_type"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_cef_event_type"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "UniFi GIM normalization lookup."
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "STRING"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "3ac56df3-be78-5644-b451-6d549481ee59"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "2e3a9edc-b3b1-53ea-b0dc-d5bab19855bc"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "813ada51-b64b-5184-bb32-c96e439bf950",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "unifi_gim_severity_level"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi unifi_gim_severity_level"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "UniFi GIM normalization lookup."
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "STRING"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "1b7960c9-e708-532e-b7dd-ed44096289b4"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "8212e237-cff4-50a3-9d5f-1c2518d232e8"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline",
+        "version": "1"
+      },
+      "id": "10e284f8-5990-5295-9209-b14aff2bb13d",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi GIM"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Mixed CEF/syslog parsing, GIM normalization, enrichment, and routing."
+        },
+        "source": {
+          "@type": "string",
+          "@value": "pipeline \"UniFi GIM\"\nstage 0 match all\n  rule \"UniFi - detect mixed format\"\nstage 10 match either\n  rule \"UniFi - parse CEF\"\n  rule \"UniFi - parse device syslog header\"\nstage 20 match either\n  rule \"UniFi - normalize CEF client events\"\n  rule \"UniFi - normalize device syslog families\"\nstage 30 match all\n  rule \"UniFi - normalize severity to GIM\"\nstage 40 match all\n  rule \"UniFi - route normalized messages\"\nstage 41 match either\n  rule \"UniFi - route unsupported messages\"\n  rule \"UniFi - route CEF messages\"\n  rule \"UniFi - route syslog messages\"\nend\n"
+        },
+        "connected_streams": [
+          {
+            "@type": "string",
+            "@value": "78261a1d-0113-5fad-8385-0ca42baf9188"
+          }
+        ]
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "0ef3f741-9348-5572-a0fb-1c766f1e7c6d",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize severity to GIM"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/30-normalize-severity.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize severity to GIM\"\nwhen\n  has_field(\"unifi_severity\")\nthen\n  let level = lookup_value(\"unifi_gim_severity_level\", to_string($message.unifi_severity));\n  let name = lookup_value(\"unifi_gim_severity\", to_string($message.unifi_severity));\n  set_field(\"vendor_event_severity\", to_string($message.unifi_severity));\n  set_field(\"event_severity\", to_string(name));\n  set_field(\"event_severity_level\", to_long(level));\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "1a99d196-22e3-58f0-b1c2-4d0cebb70453",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - detect mixed format"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/00-detect-format.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - detect mixed format\"\nwhen\n  has_field(\"unifi_ingest\") && to_bool($message.unifi_ingest)\nthen\n  set_field(\"unifi_schema_version\", \"gim-7.1\");\n  set_field(\"unifi_integration_version\", \"0.1.0\");\n  set_field(\"full_message\", to_string($message.message));\n  let cef = regex(pattern: \"(?:^|\\\\s)(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let device = regex(pattern: \"^[^ ]+ [0-9A-Fa-f]{12},.+-\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\+\\\\d+:\", value: to_string($message.message));\n  set_field(\"unifi_log_format\", if(cef.matches, \"cef\", if(device.matches, \"syslog\", \"unknown\")));\n  set_field(\"unifi_parse_status\", if(cef.matches || device.matches, \"detected\", \"malformed\"));\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "1b1df70e-eda7-5b4e-80fe-0eeb1523f728",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - route syslog messages"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/43-route-syslog.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - route syslog messages\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"syslog\"\nthen\n  route_to_stream(name: \"UniFi - Syslog\", remove_from_default: false);\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "1f88a746-1947-59df-a876-3f27bf198b99",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - parse device syslog header"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/11-parse-syslog-header.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - parse device syslog header\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"syslog\"\nthen\n  let header = grok(\n    pattern: \"%{UNIFI_DEVICE_HEADER}\",\n    value: to_string($message.message),\n    only_named_captures: true\n  );\n  set_fields(header);\n  set_field(\"event_source_product\", \"unifi_device\");\n  set_field(\"event_source\", to_string(header[\"host_name\"]));\n  set_field(\"host_mac\", to_string(header[\"unifi_device_mac\"]));\n  set_field(\"host_device_vendor\", \"Ubiquiti\");\n  set_field(\"host_device_model\", to_string(header[\"unifi_device_model\"]));\n  set_field(\"host_os_version\", to_string(header[\"unifi_device_version\"]));\n  set_field(\"unifi_parse_status\", \"unsupported\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "5512ac61-0230-5b5e-9b74-735198e1c75d",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize CEF client events"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/20-normalize-cef.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize CEF client events\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  set_field(\"event_observer_hostname\", to_string($message.UNIFIhost));\n  set_field(\"event_reporter\", to_string($message.UNIFIhost));\n  set_field(\"event_source\", to_string($message.UNIFIhost));\n  set_field(\"unifi_site_code\", to_string($message.UNIFIsite));\n  set_field(\"source_ip\", to_ip($message.UNIFIclientIp));\n  set_field(\"source_mac\", lowercase(to_string($message.UNIFIclientMac)));\n  set_field(\"network_name\", to_string($message.UNIFInetworkName));\n  set_field(\"network_cidr\", to_string($message.UNIFInetworkSubnet));\n  set_field(\"network_vlan\", to_long($message.UNIFInetworkVlan));\n  set_field(\"gim_event_type_code\", 129999);\n  set_field(\"gim_event_category\", \"network\");\n  set_field(\"gim_event_subcategory\", \"network.default\");\n  set_field(\"gim_event_type\", \"network message\");\n  let connected = to_string($message.device_event_class_id) == \"403\";\n  let disconnected = to_string($message.device_event_class_id) == \"404\";\n  set_field(\"event_action\", if(connected, \"connected\", if(disconnected, \"disconnected\", \"unknown\")));\n  set_field(\"unifi_event_type\", if(connected, \"network.client.connected\", if(disconnected, \"network.client.disconnected\", \"unknown\")));\n  set_field(\"event_code\", to_long($message.device_event_class_id));\n  set_field(\"event_id\", to_string($message.device_event_class_id));\n  set_field(\"unifi_severity\", lookup_value(\"unifi_cef_severity\", to_string($message.severity)));\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "7f04689d-5567-5398-b2d2-51a043f7aa46",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize device syslog families"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/21-normalize-syslog.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize device syslog families\"\nwhen\n  has_field(\"unifi_vendor_message\")\nthen\n  let text = to_string($message.unifi_vendor_message);\n  let link = regex(pattern: \"Port (?<port>\\\\d+) link (?<state>up|down)$\", value: text);\n  let stp = regex(pattern: \"Port (?<port>\\\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$\", value: text);\n  let wlan = regex(pattern: \"(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\\\.11: (?<state>associated|disassociated)$\", value: text);\n  let mesh = contains(value: text, search: \"ace_reporter.mesh_halt_timeout(): Mesh halt expired\");\n  let reboot = contains(value: text, search: \"ace_reporter.reporter_handle_response_json(): [reboot] reboot\");\n  let known = link.matches || stp.matches || wlan.matches || mesh || reboot;\n  set_field(\"unifi_parse_status\", if(known, \"parsed\", \"unsupported\"));\n  set_field(\"unifi_switch_port\", if(link.matches, to_long(link[\"port\"]), if(stp.matches, to_long(stp[\"port\"]), 0)));\n  set_field(\"source_mac\", if(wlan.matches, lowercase(to_string(wlan[\"client\"])), \"\"));\n  set_field(\"destination_mac\", if(wlan.matches, lowercase(to_string($message.host_mac)), \"\"));\n  set_field(\"destination_hostname\", if(wlan.matches, to_string($message.host_name), \"\"));\n  set_field(\"unifi_wlan_interface\", if(wlan.matches, to_string(wlan[\"interface\"]), \"\"));\n  set_field(\"unifi_mesh_timeout\", mesh);\n  set_field(\"event_action\", if(link.matches, lowercase(to_string(link[\"state\"])), if(stp.matches, lowercase(to_string(stp[\"state\"])), if(wlan.matches, if(to_string(wlan[\"state\"]) == \"associated\", \"connected\", \"disconnected\"), if(mesh, \"timeout\", if(reboot, \"reboot\", \"unknown\"))))));\n  set_field(\"unifi_event_type\", if(link.matches, concat(\"network.port.\", lowercase(to_string(link[\"state\"]))), if(stp.matches, concat(\"network.port.\", lowercase(to_string(stp[\"state\"]))), if(wlan.matches, if(to_string(wlan[\"state\"]) == \"associated\", \"network.client.connected\", \"network.client.disconnected\"), if(mesh, \"wireless.mesh.timeout\", if(reboot, \"device.reboot\", \"unknown\"))))));\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "85b6edc9-b67a-5db0-91de-35c72c00e8a7",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - route unsupported messages"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/41-route-unsupported.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - route unsupported messages\"\nwhen\n  has_field(\"unifi_parse_status\") && to_string($message.unifi_parse_status) != \"parsed\"\nthen\n  route_to_stream(name: \"UniFi - Unsupported\", remove_from_default: false);\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "a78d69ce-5522-5617-874c-2ec8252365d5",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - parse CEF"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/10-parse-cef.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - parse CEF\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  let capture = regex(pattern: \"(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let cef = parse_cef(to_string(capture[\"0\"]), use_full_names: true);\n  set_fields(to_map(cef));\n  set_field(\"event_source_product\", \"unifi_network\");\n  set_field(\"vendor_name\", \"Ubiquiti\");\n  set_field(\"vendor_product\", \"UniFi Network\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "b05e5d7a-ec62-515b-8774-44cf52a46918",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - route normalized messages"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/40-route.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - route normalized messages\"\nwhen\n  has_field(\"unifi_ingest\") && to_bool($message.unifi_ingest)\nthen\n  route_to_stream(name: \"UniFi - Parsed\", remove_from_default: false);\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "da57c38e-21a4-5425-a06d-029e286fd163",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - route CEF messages"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/42-route-cef.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - route CEF messages\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  route_to_stream(name: \"UniFi - CEF\", remove_from_default: false);\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "0a57ef15-0a43-565e-b927-1109b7df1d29",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Parsed"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "PRESENCE"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "unifi_parse_status"
+            },
+            "value": {
+              "@type": "string",
+              "@value": ""
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Managed by Graylog UniFi GIM"
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "All messages handled by the UniFi GIM pipeline."
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "1c394133-e9c2-5219-89e9-282b3e3f62d6",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - CEF"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "unifi_log_format"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "cef"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Managed by Graylog UniFi GIM"
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "UniFi Network CEF messages."
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "75f814eb-127e-55e9-9e05-a10745782c23",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Unsupported"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "unifi_parse_status"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "unsupported"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Managed by Graylog UniFi GIM"
+            }
+          },
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "unifi_parse_status"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "malformed"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Managed by Graylog UniFi GIM"
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "OR"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Recognized UniFi envelopes without a supported message signature, plus malformed input."
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "78261a1d-0113-5fad-8385-0ca42baf9188",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Raw"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "unifi_ingest"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "true"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Managed by Graylog UniFi GIM"
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Entry stream for messages from an input with unifi_ingest=true."
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "b75b8d50-f57c-5d07-bbe2-f26497933310",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - Syslog"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "unifi_log_format"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "syslog"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Managed by Graylog UniFi GIM"
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "UniFi AP, switch, and gateway device syslog messages."
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    }
+  ]
+}

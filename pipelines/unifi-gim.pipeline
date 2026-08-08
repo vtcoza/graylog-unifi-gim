@@ -1,0 +1,18 @@
+pipeline "UniFi GIM"
+stage 0 match all
+  rule "UniFi - detect mixed format"
+stage 10 match either
+  rule "UniFi - parse CEF"
+  rule "UniFi - parse device syslog header"
+stage 20 match either
+  rule "UniFi - normalize CEF client events"
+  rule "UniFi - normalize device syslog families"
+stage 30 match all
+  rule "UniFi - normalize severity to GIM"
+stage 40 match all
+  rule "UniFi - route normalized messages"
+stage 41 match either
+  rule "UniFi - route unsupported messages"
+  rule "UniFi - route CEF messages"
+  rule "UniFi - route syslog messages"
+end

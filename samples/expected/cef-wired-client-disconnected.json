@@ -1,0 +1,15 @@
+{
+  "unifi_log_format": "cef",
+  "unifi_parse_status": "parsed",
+  "event_code": 404,
+  "event_action": "disconnected",
+  "unifi_event_type": "network.client.disconnected",
+  "source_ip": "192.0.2.21",
+  "source_hostname": "TEST-CLIENT-01",
+  "destination_hostname": "TEST-SWITCH-01",
+  "event_duration": 3723,
+  "unifi_client_bytes_down": 1572864,
+  "unifi_client_bytes_up": 512,
+  "unifi_switch_port": 7,
+  "vendor_event_severity_level": 2
+}

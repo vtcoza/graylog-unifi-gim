@@ -1,0 +1,10 @@
+{
+  "unifi_parse_status": "parsed",
+  "event_action": "disconnected",
+  "unifi_event_type": "network.client.disconnected",
+  "source_mac": "02:00:00:00:00:21",
+  "destination_hostname": "TEST-AP-02",
+  "host_device_model": "UAP-AC-LR",
+  "host_os_version": "6.8.2+15592",
+  "unifi_wlan_interface": "wifi0ap1"
+}

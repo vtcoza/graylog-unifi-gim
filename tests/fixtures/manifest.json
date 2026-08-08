@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {"id": "cef-wired-client-connected", "format": "cef", "firmware": "UniFi Network 10.4.57", "status": "parsed"},
+    {"id": "cef-wired-client-disconnected", "format": "cef", "firmware": "UniFi Network 10.4.57", "status": "parsed"},
+    {"id": "syslog-port-up", "format": "syslog", "firmware": "USW 7.4.1", "status": "parsed"},
+    {"id": "syslog-port-down-pri", "format": "syslog", "firmware": "USW 7.4.1", "status": "parsed"},
+    {"id": "syslog-port-blocking", "format": "syslog", "firmware": "USW 7.4.1", "status": "parsed"},
+    {"id": "syslog-port-forwarding", "format": "syslog", "firmware": "USW 7.4.1", "status": "parsed"},
+    {"id": "syslog-client-associated", "format": "syslog", "firmware": "U6-LR 6.7.54", "status": "parsed"},
+    {"id": "syslog-client-disassociated-firmware", "format": "syslog", "firmware": "UAP-AC-LR 6.8.2", "status": "parsed"},
+    {"id": "syslog-mesh-timeout", "format": "syslog", "firmware": "U6-LR 6.7.54", "status": "parsed"},
+    {"id": "syslog-device-reboot", "format": "syslog", "firmware": "U6-Lite 6.7.54", "status": "parsed"},
+    {"id": "syslog-unsupported-common", "format": "syslog", "firmware": "U6-Lite 6.7.54", "status": "unsupported"},
+    {"id": "malformed", "format": "unknown", "firmware": null, "status": "malformed"}
+  ]
+}

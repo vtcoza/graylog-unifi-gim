@@ -1,0 +1,23 @@
+name: Bug report
+description: Report a parser, pack, stream, event, or dashboard defect.
+title: "[bug] "
+labels: [bug]
+body:
+  - type: input
+    id: graylog
+    attributes: {label: Graylog version, placeholder: 7.1.5}
+    validations: {required: true}
+  - type: input
+    id: pack
+    attributes: {label: Content-pack version and variant}
+    validations: {required: true}
+  - type: textarea
+    id: behavior
+    attributes: {label: Expected and actual behavior}
+    validations: {required: true}
+  - type: textarea
+    id: sample
+    attributes:
+      label: Sanitized raw sample
+      render: text
+

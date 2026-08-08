@@ -1,0 +1,18 @@
+{
+  "profile": "UniFi GIM 0.1",
+  "description": "Recommended Graylog Open field-type profile. Assign it before ingest and rotate the write index.",
+  "mappings": {
+    "destination_ip": "ip",
+    "event_code": "long",
+    "event_created": "date",
+    "event_duration": "long",
+    "event_severity_level": "byte",
+    "gim_event_type_code": "long",
+    "network_vlan": "long",
+    "process_pid": "long",
+    "source_ip": "ip",
+    "unifi_client_bytes_down": "long",
+    "unifi_client_bytes_up": "long",
+    "unifi_switch_port": "long"
+  }
+}

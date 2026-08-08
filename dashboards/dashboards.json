@@ -1,0 +1,42 @@
+[
+  {
+    "id": "67d9dc43-b498-57d2-8790-c4ac75396cb6",
+    "title": "UniFi - Overview",
+    "description": "Volume, severity, format, device model, and normalized event activity.",
+    "widgets": [
+      {"title": "Messages", "type": "count", "query": "exists:unifi_parse_status"},
+      {"title": "Events by type", "type": "aggregation", "query": "exists:unifi_event_type", "group_by": "unifi_event_type"},
+      {"title": "Devices", "type": "aggregation", "query": "exists:host_name", "group_by": "host_name"},
+      {"title": "Severity", "type": "aggregation", "query": "exists:event_severity", "group_by": "event_severity"}
+    ]
+  },
+  {
+    "id": "26b25666-0454-53ab-9531-fe2aa2364f47",
+    "title": "UniFi - Client Activity",
+    "description": "Client connections and disconnects by client, network, and attachment device.",
+    "widgets": [
+      {"title": "Connect vs disconnect", "type": "aggregation", "query": "unifi_event_type:network.client.*", "group_by": "event_action"},
+      {"title": "Clients", "type": "aggregation", "query": "exists:source_mac", "group_by": "source_mac"},
+      {"title": "Networks", "type": "aggregation", "query": "exists:network_name", "group_by": "network_name"}
+    ]
+  },
+  {
+    "id": "98290735-9964-57ea-844a-c07d077c2741",
+    "title": "UniFi - Switch Health",
+    "description": "Port link and spanning-tree state transitions.",
+    "widgets": [
+      {"title": "Port transitions", "type": "aggregation", "query": "unifi_event_type:network.port.*", "group_by": "unifi_event_type"},
+      {"title": "Noisiest ports", "type": "aggregation", "query": "exists:unifi_switch_port", "group_by": "host_name,unifi_switch_port"}
+    ]
+  },
+  {
+    "id": "0fd1e7df-a26f-5295-ad2d-c84323a040ab",
+    "title": "UniFi - Parser Health",
+    "description": "Parsing status, unsupported signatures, and malformed messages.",
+    "widgets": [
+      {"title": "Parse status", "type": "aggregation", "query": "exists:unifi_parse_status", "group_by": "unifi_parse_status"},
+      {"title": "Unsupported messages", "type": "messages", "query": "unifi_parse_status:(unsupported OR malformed)"},
+      {"title": "Firmware coverage", "type": "aggregation", "query": "exists:unifi_device_version", "group_by": "unifi_device_version"}
+    ]
+  }
+]
