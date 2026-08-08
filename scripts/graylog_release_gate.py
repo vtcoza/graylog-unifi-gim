@@ -14,16 +14,28 @@ from pathlib import Path
 from typing import Any
 
 
-def request(base: str, user: str, password: str, method: str, path: str, body: Any = None) -> Any:
+def request(
+    base: str,
+    user: str,
+    password: str,
+    method: str,
+    path: str,
+    body: Any = None,
+    accept: str = "application/json",
+) -> Any:
     data = None if body is None else json.dumps(body).encode()
     req = urllib.request.Request(base.rstrip("/") + path, data=data, method=method)
     req.add_header("Authorization", "Basic " + base64.b64encode(f"{user}:{password}".encode()).decode())
-    req.add_header("Accept", "application/json")
+    req.add_header("Accept", accept)
     req.add_header("Content-Type", "application/json")
     req.add_header("X-Requested-By", "graylog-unifi-gim-release-gate")
     with urllib.request.urlopen(req, timeout=20) as response:
         content = response.read()
-        return json.loads(content) if content else None
+        if not content:
+            return None
+        if response.headers.get_content_type() == "application/json":
+            return json.loads(content)
+        return content.decode().strip()
 
 
 def wait_ready(base: str, user: str, password: str, timeout: int) -> None:
@@ -31,8 +43,16 @@ def wait_ready(base: str, user: str, password: str, timeout: int) -> None:
     last_error: Exception | None = None
     while time.monotonic() < deadline:
         try:
-            status = request(base, user, password, "GET", "/api/system/lbstatus")
-            if status is None or status.get("status") in {"ALIVE", "THROTTLED"}:
+            status = request(
+                base,
+                user,
+                password,
+                "GET",
+                "/api/system/lbstatus",
+                accept="text/plain",
+            )
+            state = status.get("status") if isinstance(status, dict) else status
+            if state in {"ALIVE", "THROTTLED"}:
                 return
         except (OSError, urllib.error.URLError, json.JSONDecodeError) as error:
             last_error = error
