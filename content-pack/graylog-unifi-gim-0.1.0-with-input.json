@@ -32,17 +32,394 @@
       },
       "id": "0fd1e7df-a26f-5295-ad2d-c84323a040ab",
       "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "Parsing status, unsupported signatures, and malformed messages."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "848e63ba-287d-558a-b122-5c3ee28c6274",
+              "timerange": {
+                "range": 86400,
+                "type": "relative"
+              },
+              "filter": null,
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:unifi_parse_status"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "unifi_parse_status"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "6f562f90-6fb8-5f5c-9e8b-f28bf8c49330",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "unifi_parse_status:(unsupported OR malformed)"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "3c8f931f-0e8e-5a91-b7a9-e0f9f79a3404",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:unifi_device_version"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "unifi_device_version"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "bba80907-0130-5089-a0da-8e8caf564d92",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2026-01-01T00:00:00.000Z"
+        },
+        "created_at": "2026-01-01T00:00:00.000Z",
+        "requires": {},
+        "state": {
+          "848e63ba-287d-558a-b122-5c3ee28c6274": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "UniFi - Parser Health"
+              },
+              "widget": {
+                "a7e5fa0f-0436-56fc-aa79-4d994b06c0df": "Parse status",
+                "eb6cfe3a-7a9e-5ab5-921b-b390ecde29ff": "Unsupported messages",
+                "e01b673f-cce5-5b44-ac20-a01d765bbb3d": "Firmware coverage"
+              }
+            },
+            "widgets": [
+              {
+                "id": "a7e5fa0f-0436-56fc-aa79-4d994b06c0df",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:unifi_parse_status"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "unifi_parse_status"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Parse status",
+                "context": null
+              },
+              {
+                "id": "eb6cfe3a-7a9e-5ab5-921b-b390ecde29ff",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "unifi_parse_status:(unsupported OR malformed)"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "table",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Unsupported messages",
+                "context": null
+              },
+              {
+                "id": "e01b673f-cce5-5b44-ac20-a01d765bbb3d",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:unifi_device_version"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "unifi_device_version"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Firmware coverage",
+                "context": null
+              }
+            ],
+            "widget_mapping": {
+              "a7e5fa0f-0436-56fc-aa79-4d994b06c0df": [
+                "6f562f90-6fb8-5f5c-9e8b-f28bf8c49330"
+              ],
+              "eb6cfe3a-7a9e-5ab5-921b-b390ecde29ff": [
+                "3c8f931f-0e8e-5a91-b7a9-e0f9f79a3404"
+              ],
+              "e01b673f-cce5-5b44-ac20-a01d765bbb3d": [
+                "bba80907-0130-5089-a0da-8e8caf564d92"
+              ]
+            },
+            "positions": {
+              "a7e5fa0f-0436-56fc-aa79-4d994b06c0df": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "eb6cfe3a-7a9e-5ab5-921b-b390ecde29ff": {
+                "col": 7,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "e01b673f-cce5-5b44-ac20-a01d765bbb3d": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
         "title": {
           "@type": "string",
           "@value": "UniFi - Parser Health"
         },
+        "type": "DASHBOARD",
         "description": {
           "@type": "string",
           "@value": "Parsing status, unsupported signatures, and malformed messages."
-        },
-        "definition": {
-          "@type": "string",
-          "@value": "{\"description\":\"Parsing status, unsupported signatures, and malformed messages.\",\"id\":\"0fd1e7df-a26f-5295-ad2d-c84323a040ab\",\"title\":\"UniFi - Parser Health\",\"widgets\":[{\"group_by\":\"unifi_parse_status\",\"query\":\"exists:unifi_parse_status\",\"title\":\"Parse status\",\"type\":\"aggregation\"},{\"query\":\"unifi_parse_status:(unsupported OR malformed)\",\"title\":\"Unsupported messages\",\"type\":\"messages\"},{\"group_by\":\"unifi_device_version\",\"query\":\"exists:unifi_device_version\",\"title\":\"Firmware coverage\",\"type\":\"aggregation\"}]}"
         }
       },
       "constraints": [
@@ -60,17 +437,394 @@
       },
       "id": "26b25666-0454-53ab-9531-fe2aa2364f47",
       "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "Client connections and disconnects by client, network, and attachment device."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "19118c18-20c9-56dc-8290-77218907022b",
+              "timerange": {
+                "range": 86400,
+                "type": "relative"
+              },
+              "filter": null,
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "unifi_event_type:network.client.*"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "event_action"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "1893a849-3def-501b-abcc-23dfb40b7b80",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:source_mac"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source_mac"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "5dbbb9ab-968d-596c-b332-a1bc054e919c",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:network_name"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "network_name"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "3fdf0aa0-b319-5d76-9dd3-3e28ee13d4c8",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2026-01-01T00:00:00.000Z"
+        },
+        "created_at": "2026-01-01T00:00:00.000Z",
+        "requires": {},
+        "state": {
+          "19118c18-20c9-56dc-8290-77218907022b": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "UniFi - Client Activity"
+              },
+              "widget": {
+                "17f7c638-5730-5cad-87f2-d959be0b0a57": "Connect vs disconnect",
+                "ace86ece-9d9b-5dd9-8679-fcefe4d175fe": "Clients",
+                "08039dc6-016a-51d8-9885-b4ee16e7322e": "Networks"
+              }
+            },
+            "widgets": [
+              {
+                "id": "17f7c638-5730-5cad-87f2-d959be0b0a57",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "unifi_event_type:network.client.*"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "event_action"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Connect vs disconnect",
+                "context": null
+              },
+              {
+                "id": "ace86ece-9d9b-5dd9-8679-fcefe4d175fe",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:source_mac"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "source_mac"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Clients",
+                "context": null
+              },
+              {
+                "id": "08039dc6-016a-51d8-9885-b4ee16e7322e",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:network_name"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "network_name"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Networks",
+                "context": null
+              }
+            ],
+            "widget_mapping": {
+              "17f7c638-5730-5cad-87f2-d959be0b0a57": [
+                "1893a849-3def-501b-abcc-23dfb40b7b80"
+              ],
+              "ace86ece-9d9b-5dd9-8679-fcefe4d175fe": [
+                "5dbbb9ab-968d-596c-b332-a1bc054e919c"
+              ],
+              "08039dc6-016a-51d8-9885-b4ee16e7322e": [
+                "3fdf0aa0-b319-5d76-9dd3-3e28ee13d4c8"
+              ]
+            },
+            "positions": {
+              "17f7c638-5730-5cad-87f2-d959be0b0a57": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "ace86ece-9d9b-5dd9-8679-fcefe4d175fe": {
+                "col": 7,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "08039dc6-016a-51d8-9885-b4ee16e7322e": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
         "title": {
           "@type": "string",
           "@value": "UniFi - Client Activity"
         },
+        "type": "DASHBOARD",
         "description": {
           "@type": "string",
           "@value": "Client connections and disconnects by client, network, and attachment device."
-        },
-        "definition": {
-          "@type": "string",
-          "@value": "{\"description\":\"Client connections and disconnects by client, network, and attachment device.\",\"id\":\"26b25666-0454-53ab-9531-fe2aa2364f47\",\"title\":\"UniFi - Client Activity\",\"widgets\":[{\"group_by\":\"event_action\",\"query\":\"unifi_event_type:network.client.*\",\"title\":\"Connect vs disconnect\",\"type\":\"aggregation\"},{\"group_by\":\"source_mac\",\"query\":\"exists:source_mac\",\"title\":\"Clients\",\"type\":\"aggregation\"},{\"group_by\":\"network_name\",\"query\":\"exists:network_name\",\"title\":\"Networks\",\"type\":\"aggregation\"}]}"
         }
       },
       "constraints": [
@@ -88,17 +842,502 @@
       },
       "id": "67d9dc43-b498-57d2-8790-c4ac75396cb6",
       "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "Volume, severity, format, device model, and normalized event activity."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "8f7bb1bd-3a72-5745-968f-6c5bb39876b0",
+              "timerange": {
+                "range": 86400,
+                "type": "relative"
+              },
+              "filter": null,
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:unifi_parse_status"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "b4f9410e-7b52-5feb-83a9-2792170d9168",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:unifi_event_type"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "205ae4e0-7fe6-5b1b-9fd0-9765d04565a1",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:host_name"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "host_name"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "4d85da6e-37ee-50ea-8bc4-3bf5975c4127",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:event_severity"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "event_severity"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "e58ee4a3-253f-589f-a7a1-5c77bf5bb10b",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2026-01-01T00:00:00.000Z"
+        },
+        "created_at": "2026-01-01T00:00:00.000Z",
+        "requires": {},
+        "state": {
+          "8f7bb1bd-3a72-5745-968f-6c5bb39876b0": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "UniFi - Overview"
+              },
+              "widget": {
+                "9c9e561c-bde5-5637-8cc9-8a05df456e80": "Messages",
+                "c557a928-9479-5b1b-8a05-c2d6d99599e8": "Events by type",
+                "43c1ade4-81d5-5090-8b07-7df88117a77e": "Devices",
+                "bf4919af-1287-5158-b1ec-f7bcdb0cf47c": "Severity"
+              }
+            },
+            "widgets": [
+              {
+                "id": "9c9e561c-bde5-5637-8cc9-8a05df456e80",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:unifi_parse_status"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Messages",
+                "context": null
+              },
+              {
+                "id": "c557a928-9479-5b1b-8a05-c2d6d99599e8",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:unifi_event_type"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Events by type",
+                "context": null
+              },
+              {
+                "id": "43c1ade4-81d5-5090-8b07-7df88117a77e",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:host_name"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "host_name"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Devices",
+                "context": null
+              },
+              {
+                "id": "bf4919af-1287-5158-b1ec-f7bcdb0cf47c",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:event_severity"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "event_severity"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Severity",
+                "context": null
+              }
+            ],
+            "widget_mapping": {
+              "9c9e561c-bde5-5637-8cc9-8a05df456e80": [
+                "b4f9410e-7b52-5feb-83a9-2792170d9168"
+              ],
+              "c557a928-9479-5b1b-8a05-c2d6d99599e8": [
+                "205ae4e0-7fe6-5b1b-9fd0-9765d04565a1"
+              ],
+              "43c1ade4-81d5-5090-8b07-7df88117a77e": [
+                "4d85da6e-37ee-50ea-8bc4-3bf5975c4127"
+              ],
+              "bf4919af-1287-5158-b1ec-f7bcdb0cf47c": [
+                "e58ee4a3-253f-589f-a7a1-5c77bf5bb10b"
+              ]
+            },
+            "positions": {
+              "9c9e561c-bde5-5637-8cc9-8a05df456e80": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "c557a928-9479-5b1b-8a05-c2d6d99599e8": {
+                "col": 7,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "43c1ade4-81d5-5090-8b07-7df88117a77e": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              },
+              "bf4919af-1287-5158-b1ec-f7bcdb0cf47c": {
+                "col": 7,
+                "row": 5,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
         "title": {
           "@type": "string",
           "@value": "UniFi - Overview"
         },
+        "type": "DASHBOARD",
         "description": {
           "@type": "string",
           "@value": "Volume, severity, format, device model, and normalized event activity."
-        },
-        "definition": {
-          "@type": "string",
-          "@value": "{\"description\":\"Volume, severity, format, device model, and normalized event activity.\",\"id\":\"67d9dc43-b498-57d2-8790-c4ac75396cb6\",\"title\":\"UniFi - Overview\",\"widgets\":[{\"query\":\"exists:unifi_parse_status\",\"title\":\"Messages\",\"type\":\"count\"},{\"group_by\":\"unifi_event_type\",\"query\":\"exists:unifi_event_type\",\"title\":\"Events by type\",\"type\":\"aggregation\"},{\"group_by\":\"host_name\",\"query\":\"exists:host_name\",\"title\":\"Devices\",\"type\":\"aggregation\"},{\"group_by\":\"event_severity\",\"query\":\"exists:event_severity\",\"title\":\"Severity\",\"type\":\"aggregation\"}]}"
         }
       },
       "constraints": [
@@ -116,17 +1355,286 @@
       },
       "id": "98290735-9964-57ea-844a-c07d077c2741",
       "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "Port link and spanning-tree state transitions."
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "dafe0e16-e937-5e5e-a7b1-a0f5afc9239f",
+              "timerange": {
+                "range": 86400,
+                "type": "relative"
+              },
+              "filter": null,
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "unifi_event_type:network.port.*"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "442094e2-ec27-539f-893b-ed1af2b050a8",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "exists:unifi_switch_port"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "range": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "stream_categories": [],
+                  "row_limit": 10,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "host_name,unifi_switch_port"
+                      ],
+                      "limit": 10
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "911f6b13-f76a-55f5-884a-aefaa632a836",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2026-01-01T00:00:00.000Z"
+        },
+        "created_at": "2026-01-01T00:00:00.000Z",
+        "requires": {},
+        "state": {
+          "dafe0e16-e937-5e5e-a7b1-a0f5afc9239f": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "UniFi - Switch Health"
+              },
+              "widget": {
+                "48e15c2d-bf72-51f3-ab69-69082bf97b27": "Port transitions",
+                "67f660ec-4266-5e9d-bb25-55adf5a46c69": "Noisiest ports"
+              }
+            },
+            "widgets": [
+              {
+                "id": "48e15c2d-bf72-51f3-ab69-69082bf97b27",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "unifi_event_type:network.port.*"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "unifi_event_type"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Port transitions",
+                "context": null
+              },
+              {
+                "id": "67f660ec-4266-5e9d-bb25-55adf5a46c69",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "range": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "exists:unifi_switch_port"
+                },
+                "streams": [],
+                "stream_categories": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 10,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "host_name,unifi_switch_port"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 10
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message count"
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": [
+                    {
+                      "type": "series",
+                      "field": "count()",
+                      "direction": "Descending"
+                    }
+                  ]
+                },
+                "description": "Noisiest ports",
+                "context": null
+              }
+            ],
+            "widget_mapping": {
+              "48e15c2d-bf72-51f3-ab69-69082bf97b27": [
+                "442094e2-ec27-539f-893b-ed1af2b050a8"
+              ],
+              "67f660ec-4266-5e9d-bb25-55adf5a46c69": [
+                "911f6b13-f76a-55f5-884a-aefaa632a836"
+              ]
+            },
+            "positions": {
+              "48e15c2d-bf72-51f3-ab69-69082bf97b27": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              },
+              "67f660ec-4266-5e9d-bb25-55adf5a46c69": {
+                "col": 7,
+                "row": 1,
+                "height": 4,
+                "width": 6
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
         "title": {
           "@type": "string",
           "@value": "UniFi - Switch Health"
         },
+        "type": "DASHBOARD",
         "description": {
           "@type": "string",
           "@value": "Port link and spanning-tree state transitions."
-        },
-        "definition": {
-          "@type": "string",
-          "@value": "{\"description\":\"Port link and spanning-tree state transitions.\",\"id\":\"98290735-9964-57ea-844a-c07d077c2741\",\"title\":\"UniFi - Switch Health\",\"widgets\":[{\"group_by\":\"unifi_event_type\",\"query\":\"unifi_event_type:network.port.*\",\"title\":\"Port transitions\",\"type\":\"aggregation\"},{\"group_by\":\"host_name,unifi_switch_port\",\"query\":\"exists:unifi_switch_port\",\"title\":\"Noisiest ports\",\"type\":\"aggregation\"}]}"
         }
       },
       "constraints": [

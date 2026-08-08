@@ -250,18 +250,115 @@ def _dashboard_entities(root: Path) -> list[dict[str, Any]]:
     dashboards = json.loads((root / "dashboards" / "dashboards.json").read_text(encoding="utf-8"))
     entities = []
     for item in dashboards:
-        # Definition is kept declarative and exported in a versioned dashboard entity.
-        entities.append(
-            _entity(
-                "dashboard",
-                item["id"],
+        query_id = _id("dashboard_query", item["title"])
+        search_types = []
+        widgets = []
+        widget_mapping: dict[str, list[str]] = {}
+        positions: dict[str, dict[str, int]] = {}
+        widget_titles: dict[str, str] = {}
+        for index, widget in enumerate(item["widgets"]):
+            widget_id = _id("dashboard_widget", f'{item["title"]}:{widget["title"]}')
+            search_type_id = _id("dashboard_search_type", f'{item["title"]}:{widget["title"]}')
+            group_by = widget.get("group_by", "unifi_event_type")
+            query = {"type": "elasticsearch", "query_string": widget["query"]}
+            row_pivot = {"fields": [group_by], "type": "values", "config": {"limit": 10}}
+            series = [{"config": {"name": "Message count"}, "function": "count()"}]
+            sort = [{"type": "series", "field": "count()", "direction": "Descending"}]
+            search_types.append(
                 {
-                    "title": _typed(item["title"]),
-                    "description": _typed(item["description"]),
-                    "definition": _typed(json.dumps(item, sort_keys=True, separators=(",", ":"))),
-                },
-                version="2",
+                    "query": query,
+                    "name": "chart",
+                    "timerange": {"range": 86400, "type": "relative"},
+                    "column_limit": None,
+                    "streams": [],
+                    "stream_categories": [],
+                    "row_limit": 10,
+                    "series": [{"type": "count", "id": "count()", "field": None}],
+                    "filter": None,
+                    "rollup": True,
+                    "row_groups": [{"type": "values", "fields": [group_by], "limit": 10}],
+                    "type": "pivot",
+                    "id": search_type_id,
+                    "filters": [],
+                    "column_groups": [],
+                    "sort": sort,
+                }
             )
+            widgets.append(
+                {
+                    "id": widget_id,
+                    "type": "aggregation",
+                    "filter": None,
+                    "filters": [],
+                    "timerange": {"range": 86400, "type": "relative"},
+                    "query": query,
+                    "streams": [],
+                    "stream_categories": [],
+                    "config": {
+                        "visualization": "table" if widget["type"] == "messages" else "bar",
+                        "column_limit": None,
+                        "event_annotation": False,
+                        "row_limit": 10,
+                        "row_pivots": [row_pivot],
+                        "series": series,
+                        "rollup": True,
+                        "column_pivots": [],
+                        "visualization_config": None,
+                        "formatting_settings": None,
+                        "sort": sort,
+                    },
+                    "description": widget["title"],
+                    "context": None,
+                }
+            )
+            widget_mapping[widget_id] = [search_type_id]
+            positions[widget_id] = {
+                "col": 1 if index % 2 == 0 else 7,
+                "row": 1 + (index // 2) * 4,
+                "height": 4,
+                "width": 6,
+            }
+            widget_titles[widget_id] = widget["title"]
+        data = {
+            "summary": _typed(item["description"]),
+            "search": {
+                "queries": [
+                    {
+                        "id": query_id,
+                        "timerange": {"range": 86400, "type": "relative"},
+                        "filter": None,
+                        "filters": [],
+                        "query": {"type": "elasticsearch", "query_string": ""},
+                        "search_types": search_types,
+                    }
+                ],
+                "parameters": [],
+                "requires": {},
+                "owner": "admin",
+                "created_at": "2026-01-01T00:00:00.000Z",
+            },
+            "created_at": "2026-01-01T00:00:00.000Z",
+            "requires": {},
+            "state": {
+                query_id: {
+                    "selected_fields": None,
+                    "static_message_list_id": None,
+                    "titles": {"tab": {"title": item["title"]}, "widget": widget_titles},
+                    "widgets": widgets,
+                    "widget_mapping": widget_mapping,
+                    "positions": positions,
+                    "formatting": {"highlighting": []},
+                    "display_mode_settings": {"positions": {}},
+                }
+            },
+            "properties": [],
+            "owner": "admin",
+            "title": _typed(item["title"]),
+            "type": "DASHBOARD",
+            "description": _typed(item["description"]),
+        }
+        entities.append(
+            _entity("dashboard", item["id"], data, version="2")
         )
     return entities
 

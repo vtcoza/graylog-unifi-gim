@@ -36,3 +36,16 @@ def test_pack_contains_required_asset_types() -> None:
         "dashboard", "event_definition", "grok_pattern", "input", "lookup_adapter",
         "lookup_cache", "lookup_table", "pipeline", "pipeline_rule", "stream"
     } <= types
+
+
+def test_dashboard_v2_entities_have_native_search_state() -> None:
+    dashboards = [
+        entity for entity in build_pack(ROOT, "with-input")["entities"]
+        if entity["type"] == {"name": "dashboard", "version": "2"}
+    ]
+    assert len(dashboards) == 4
+    for entity in dashboards:
+        data = entity["data"]
+        assert data["type"] == "DASHBOARD"
+        assert data["search"]["queries"][0]["search_types"]
+        assert data["state"]

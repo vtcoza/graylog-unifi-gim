@@ -14,6 +14,10 @@ from pathlib import Path
 from typing import Any
 
 
+class GraylogAPIError(RuntimeError):
+    """An API response that includes Graylog's diagnostic body."""
+
+
 def request(
     base: str,
     user: str,
@@ -29,13 +33,17 @@ def request(
     req.add_header("Accept", accept)
     req.add_header("Content-Type", "application/json")
     req.add_header("X-Requested-By", "graylog-unifi-gim-release-gate")
-    with urllib.request.urlopen(req, timeout=20) as response:
-        content = response.read()
-        if not content:
-            return None
-        if response.headers.get_content_type() == "application/json":
-            return json.loads(content)
-        return content.decode().strip()
+    try:
+        with urllib.request.urlopen(req, timeout=20) as response:
+            content = response.read()
+            if not content:
+                return None
+            if response.headers.get_content_type() == "application/json":
+                return json.loads(content)
+            return content.decode().strip()
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode(errors="replace").strip()
+        raise GraylogAPIError(f"{method} {path} failed with HTTP {error.code}: {detail}") from error
 
 
 def wait_ready(base: str, user: str, password: str, timeout: int) -> None:
@@ -54,7 +62,7 @@ def wait_ready(base: str, user: str, password: str, timeout: int) -> None:
             state = status.get("status") if isinstance(status, dict) else status
             if state in {"ALIVE", "THROTTLED"}:
                 return
-        except (OSError, urllib.error.URLError, json.JSONDecodeError) as error:
+        except (OSError, urllib.error.URLError, json.JSONDecodeError, GraylogAPIError) as error:
             last_error = error
         time.sleep(5)
     raise RuntimeError(f"Graylog did not become ready: {last_error}")
