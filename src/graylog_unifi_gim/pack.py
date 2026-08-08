@@ -14,6 +14,7 @@ PACK_IDS = {
     "assets-only": "caf0ee1f-5a9c-5c58-92dd-d5e9c0e5b19f",
 }
 RAW_STREAM_ID = "78261a1d-0113-5fad-8385-0ca42baf9188"
+DEFAULT_STREAM_ID = "000000000000000000000001"
 CONSTRAINTS = [{"type": "server-version", "version": ">=7.1.0"}]
 
 
@@ -67,7 +68,7 @@ def _pipeline_entity(root: Path) -> dict[str, Any]:
             "title": _typed("UniFi GIM"),
             "description": _typed("Mixed CEF/syslog parsing, GIM normalization, enrichment, and routing."),
             "source": _typed(source),
-            "connected_streams": [_typed(RAW_STREAM_ID)],
+            "connected_streams": [_typed(DEFAULT_STREAM_ID)],
         },
     )
 

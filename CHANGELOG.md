@@ -11,6 +11,8 @@ Semantic Versioning.
   the installed UDP input before the Docker release gate replays fixtures.
 - Replace unsupported conditional expressions with signature-specific Graylog
   rules and normalize RFC 3164 priority values in the live pipeline.
+- Attach the guarded pipeline to Graylog's default stream so input messages are
+  normalized on their initial processing pass.
 
 ### Planned
 

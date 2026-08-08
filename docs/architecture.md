@@ -19,10 +19,13 @@ format detection -----> malformed/unsupported stream
       events and dashboards
 ```
 
-The input carries a static Boolean field, `unifi_ingest=true`. The `UniFi -
-Raw` stream attaches the pipeline. Stages deliberately separate envelope
-detection, vendor parsing, normalization, severity, and routing so a new vendor
-can later reuse normalization without sharing its parser.
+The input carries the static field `unifi_ingest=true`. The pipeline attaches
+to Graylog's default stream so input messages cannot miss processing during
+their first stream-routing pass; stage 0 immediately stops non-UniFi messages
+using that static-field guard. The `UniFi - Raw` stream remains the searchable
+raw classification. Stages deliberately separate envelope detection, vendor
+parsing, normalization, severity, and routing so a new vendor can later reuse
+normalization without sharing its parser.
 
 ## Processing contract
 
@@ -41,4 +44,3 @@ can later reuse normalization without sharing its parser.
 The Python parser is a regression oracle, not an ingest service. Graylog
 pipeline rules are the deployed implementation; release testing replays the
 same fixture corpus against Graylog.
-

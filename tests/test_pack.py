@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from graylog_unifi_gim.pack import build_pack
+from graylog_unifi_gim.pack import DEFAULT_STREAM_ID, build_pack
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -63,3 +63,13 @@ def test_entity_shapes_match_graylog_7_models() -> None:
         assert event["data"]["is_scheduled"] == {"@type": "boolean", "@value": False}
         assert event["data"]["config"]["type"] == "aggregation-v1"
         assert event["data"]["config"]["streams"] == ["0a57ef15-0a43-565e-b927-1109b7df1d29"]
+
+
+def test_pipeline_attaches_to_default_stream_with_input_guard() -> None:
+    entities = build_pack(ROOT, "with-input")["entities"]
+    pipeline = next(entity for entity in entities if entity["type"]["name"] == "pipeline")
+    assert pipeline["data"]["connected_streams"] == [
+        {"@type": "string", "@value": DEFAULT_STREAM_ID}
+    ]
+    initialize = (ROOT / "pipelines" / "rules" / "00-initialize.rule").read_text(encoding="utf-8")
+    assert 'has_field("unifi_ingest")' in initialize
