@@ -3,7 +3,7 @@ from __future__ import annotations
 from email.message import Message
 from unittest.mock import patch
 
-from scripts.graylog_release_gate import import_pack, request, wait_input_available
+from scripts.graylog_release_gate import import_pack, request, validate_rules, wait_input_available
 
 
 class FakeResponse:
@@ -52,6 +52,35 @@ def test_installation_uses_graylog_7_entity_wrapper() -> None:
 
 
 def test_wait_input_available_matches_installed_input() -> None:
-    inputs = {"inputs": [{"title": "UniFi - Mixed Raw UDP"}]}
-    with patch("scripts.graylog_release_gate.request", return_value=inputs):
-        wait_input_available("http://graylog", "admin", "admin", timeout=1, settle_seconds=0)
+    inputs = {"inputs": [{"id": "input-id", "title": "UniFi - Mixed Raw UDP"}]}
+    with patch("scripts.graylog_release_gate.request", side_effect=[inputs, None]) as api_request:
+        result = wait_input_available(
+            "http://graylog", "admin", "admin", timeout=1, settle_seconds=0
+        )
+    assert result == "input-id"
+    assert api_request.call_args_list[1].args[3:5] == (
+        "PUT",
+        "/api/cluster/inputstates/input-id",
+    )
+
+
+def test_validate_rules_uses_graylog_parse_endpoint() -> None:
+    pack = {
+        "entities": [
+            {
+                "type": {"name": "pipeline_rule"},
+                "data": {
+                    "title": {"@value": "Rule title"},
+                    "description": {"@value": "Rule description"},
+                    "source": {"@value": 'rule "Rule title" when true then end'},
+                },
+            },
+            {"type": {"name": "stream"}, "data": {}},
+        ]
+    }
+    with patch("scripts.graylog_release_gate.request") as api_request:
+        validate_rules("http://graylog", "admin", "admin", pack)
+    assert api_request.call_args.args[3:5] == (
+        "POST",
+        "/api/system/pipelines/rule/parse",
+    )

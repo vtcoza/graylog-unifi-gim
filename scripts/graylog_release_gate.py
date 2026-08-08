@@ -68,6 +68,27 @@ def wait_ready(base: str, user: str, password: str, timeout: int) -> None:
     raise RuntimeError(f"Graylog did not become ready: {last_error}")
 
 
+def validate_rules(base: str, user: str, password: str, pack: dict[str, Any]) -> None:
+    """Compile every rule with the target Graylog before installation."""
+    for entity in pack["entities"]:
+        if entity["type"]["name"] != "pipeline_rule":
+            continue
+        data = entity["data"]
+        request(
+            base,
+            user,
+            password,
+            "POST",
+            "/api/system/pipelines/rule/parse",
+            {
+                "_scope": "DEFAULT",
+                "title": data["title"]["@value"],
+                "description": data["description"]["@value"],
+                "source": data["source"]["@value"],
+            },
+        )
+
+
 def import_pack(base: str, user: str, password: str, pack: dict[str, Any], udp_port: int) -> None:
     request(base, user, password, "POST", "/api/system/content_packs", pack)
     parameters: dict[str, Any] = {}
@@ -97,8 +118,8 @@ def wait_input_available(
     password: str,
     timeout: int = 60,
     settle_seconds: float = 2,
-) -> None:
-    """Wait until the installed UniFi UDP input is visible, then let it bind."""
+) -> str:
+    """Wait for the input, then explicitly restart it after pack installation."""
     deadline = time.monotonic() + timeout
     last_inputs: Any = None
     while time.monotonic() < deadline:
@@ -107,7 +128,10 @@ def wait_input_available(
         for entry in inputs:
             if entry.get("title") == "UniFi - Mixed Raw UDP":
                 time.sleep(settle_seconds)
-                return
+                input_id = entry["id"]
+                request(base, user, password, "PUT", f"/api/cluster/inputstates/{input_id}")
+                time.sleep(settle_seconds)
+                return input_id
         time.sleep(1)
     raise RuntimeError(f"UniFi UDP input was not listed after installation: {last_inputs!r}")
 
@@ -170,6 +194,7 @@ def main() -> int:
         assert pack["v"] == 1 and pack["entities"]
         return 0
     wait_ready(args.url, args.user, args.password, args.timeout)
+    validate_rules(args.url, args.user, args.password, pack)
     import_pack(args.url, args.user, args.password, pack, args.udp_port)
     if args.variant == "assets-only":
         print("Assets-only import validated; UDP replay requires a separately configured input.")
