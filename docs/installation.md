@@ -54,3 +54,8 @@ Do not install both variants. They intentionally share dependent entity IDs.
 UniFi should send both CEF and device syslog to the same destination. Do not
 use a CEF-only or syslog-only Graylog input for this mixed exporter.
 
+## Test stack security
+
+The included Compose stack uses Graylog's unattended self-signed startup mode
+to create a temporary CA and provision Data Node. Its public test credentials
+and certificates must not be reused in production.

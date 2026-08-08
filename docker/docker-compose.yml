@@ -14,7 +14,6 @@ services:
       GRAYLOG_DATANODE_NODE_ID_FILE: /var/lib/graylog-datanode/node-id
       GRAYLOG_DATANODE_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
       GRAYLOG_DATANODE_MONGODB_URI: mongodb://mongodb:27017/graylog
-      GRAYLOG_DATANODE_SKIP_PREFLIGHT_CHECKS: "true"
     ulimits:
       memlock: {hard: -1, soft: -1}
       nofile: {hard: 65536, soft: 65536}
@@ -36,7 +35,8 @@ services:
       GRAYLOG_HTTP_BIND_ADDRESS: 0.0.0.0:9000
       GRAYLOG_HTTP_EXTERNAL_URI: http://127.0.0.1:9000/
       GRAYLOG_MONGODB_URI: mongodb://mongodb:27017/graylog
-      GRAYLOG_SKIP_PREFLIGHT_CHECKS: "true"
+      # Test-only unattended bootstrap: creates a self-signed CA and provisions Data Node.
+      GRAYLOG_SELFSIGNED_STARTUP: "true"
     ports:
       - 127.0.0.1:9000:9000/tcp
       - 127.0.0.1:1515:1515/udp
@@ -55,4 +55,3 @@ volumes:
   mongodb_config:
   datanode_data:
   graylog_data:
-

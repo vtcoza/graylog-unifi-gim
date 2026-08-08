@@ -23,7 +23,7 @@ jobs:
       - name: Start Graylog Open 7.1.5 stack
         run: docker compose --env-file docker/.env.example -f docker/docker-compose.yml up -d
       - name: Import and replay self-contained pack
-        run: python scripts/graylog_release_gate.py --variant with-input --timeout 900
+        run: python scripts/graylog_release_gate.py --variant with-input --timeout 600
       - name: Unit and artifact regression
         run: python -m pytest
       - name: Container logs
@@ -36,4 +36,3 @@ jobs:
         with:
           name: graylog-unifi-gim-content-packs
           path: content-pack/*.json
-
