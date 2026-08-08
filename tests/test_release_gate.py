@@ -36,10 +36,16 @@ def test_request_decodes_json_api_response() -> None:
 
 
 def test_installation_uses_graylog_7_entity_wrapper() -> None:
-    pack = {"id": "pack-id", "rev": 1, "parameters": []}
+    pack = {"id": "pack-id", "rev": 1, "parameters": [{"name": "udp_port"}]}
     with patch("scripts.graylog_release_gate.request") as api_request:
         import_pack("http://graylog", "admin", "admin", pack, 1515)
     installation_body = api_request.call_args_list[1].args[5]
     assert installation_body == {
-        "entity": {"comment": "Automated 0.1 release gate", "parameters": {}}
+        "entity": {
+            "comment": "Automated 0.1 release gate",
+            "parameters": {
+                "udp_bind_address": {"@type": "string", "@value": "0.0.0.0"},
+                "udp_port": {"@type": "integer", "@value": 1515},
+            },
+        }
     }

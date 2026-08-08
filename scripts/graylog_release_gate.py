@@ -72,7 +72,10 @@ def import_pack(base: str, user: str, password: str, pack: dict[str, Any], udp_p
     request(base, user, password, "POST", "/api/system/content_packs", pack)
     parameters: dict[str, Any] = {}
     if pack["parameters"]:
-        parameters = {"udp_bind_address": "0.0.0.0", "udp_port": udp_port}
+        parameters = {
+            "udp_bind_address": {"@type": "string", "@value": "0.0.0.0"},
+            "udp_port": {"@type": "integer", "@value": udp_port},
+        }
     request(
         base,
         user,
