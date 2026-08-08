@@ -5,6 +5,11 @@ Semantic Versioning.
 
 ## [Unreleased]
 
+### Fixed
+
+- Use Graylog 7-compatible positional arguments for `parse_cef` and wait for
+  the installed UDP input before the Docker release gate replays fixtures.
+
 ### Planned
 
 - Real gateway fixtures and upgrade/failover/failback parsers.
@@ -20,4 +25,3 @@ Semantic Versioning.
 - Self-contained and assets-only content-pack variants.
 - Twelve sanitized parser-signature fixtures and regression tests.
 - Docker/Data Node release-gate scaffold and GitHub Actions workflows.
-

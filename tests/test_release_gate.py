@@ -3,7 +3,7 @@ from __future__ import annotations
 from email.message import Message
 from unittest.mock import patch
 
-from scripts.graylog_release_gate import import_pack, request
+from scripts.graylog_release_gate import import_pack, request, wait_input_running
 
 
 class FakeResponse:
@@ -49,3 +49,16 @@ def test_installation_uses_graylog_7_entity_wrapper() -> None:
             },
         }
     }
+
+
+def test_wait_input_running_matches_installed_input() -> None:
+    states = {
+        "states": [
+            {
+                "state": "RUNNING",
+                "message_input": {"title": "UniFi - Mixed Raw UDP"},
+            }
+        ]
+    }
+    with patch("scripts.graylog_release_gate.request", return_value=states):
+        wait_input_running("http://graylog", "admin", "admin", timeout=1)

@@ -23,6 +23,12 @@ def test_rules_never_remove_fields() -> None:
     assert 'set_field("full_message"' in sources
 
 
+def test_cef_parser_uses_graylog_7_compatible_arguments() -> None:
+    source = (ROOT / "pipelines" / "rules" / "10-parse-cef.rule").read_text(encoding="utf-8")
+    assert "parse_cef(to_string(capture[\"0\"]), true)" in source
+    assert "use_full_names:" not in source
+
+
 def test_cef_and_gim_severity_lookups_are_complete() -> None:
     with (ROOT / "lookups" / "cef_severity.csv").open(encoding="utf-8", newline="") as handle:
         cef = list(csv.DictReader(handle))
@@ -47,4 +53,3 @@ def test_dashboards_and_streams_have_stable_unique_ids() -> None:
     ids = [item["id"] for item in streams + dashboards]
     assert len(ids) == len(set(ids))
     assert len(dashboards) == 4
-

@@ -3,7 +3,7 @@ when
   has_field("unifi_log_format") && to_string($message.unifi_log_format) == "cef"
 then
   let capture = regex(pattern: "(CEF:\\d+\\|Ubiquiti\\|UniFi Network\\|.*)$", value: to_string($message.message));
-  let cef = parse_cef(to_string(capture["0"]), use_full_names: true);
+  let cef = parse_cef(to_string(capture["0"]), true);
   set_fields(to_map(cef));
   set_field("event_source_product", "unifi_network");
   set_field("vendor_name", "Ubiquiti");

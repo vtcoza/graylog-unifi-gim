@@ -3012,7 +3012,7 @@
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"UniFi - parse CEF\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  let capture = regex(pattern: \"(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let cef = parse_cef(to_string(capture[\"0\"]), use_full_names: true);\n  set_fields(to_map(cef));\n  set_field(\"event_source_product\", \"unifi_network\");\n  set_field(\"vendor_name\", \"Ubiquiti\");\n  set_field(\"vendor_product\", \"UniFi Network\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+          "@value": "rule \"UniFi - parse CEF\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  let capture = regex(pattern: \"(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let cef = parse_cef(to_string(capture[\"0\"]), true);\n  set_fields(to_map(cef));\n  set_field(\"event_source_product\", \"unifi_network\");\n  set_field(\"vendor_name\", \"Ubiquiti\");\n  set_field(\"vendor_product\", \"UniFi Network\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
         }
       },
       "constraints": [
