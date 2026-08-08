@@ -1,0 +1,10 @@
+rule "UniFi - initialize mixed input"
+when
+  has_field("unifi_ingest") && to_bool($message.unifi_ingest)
+then
+  set_field("unifi_schema_version", "gim-7.1");
+  set_field("unifi_integration_version", "0.1.0");
+  set_field("full_message", to_string($message.message));
+  set_field("unifi_log_format", "unknown");
+  set_field("unifi_parse_status", "malformed");
+end

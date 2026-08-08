@@ -1,0 +1,17 @@
+rule "UniFi - normalize switch port link"
+when
+  has_field("unifi_vendor_message") &&
+  regex(
+    pattern: "Port (?<port>\\d+) link (?<state>up|down)$",
+    value: to_string($message.unifi_vendor_message)
+  ).matches == true
+then
+  let link = regex(
+    pattern: "Port (?<port>\\d+) link (?<state>up|down)$",
+    value: to_string($message.unifi_vendor_message)
+  );
+  set_field("unifi_switch_port", to_long(link["port"]));
+  set_field("event_action", lowercase(to_string(link["state"])));
+  set_field("unifi_event_type", concat("network.port.", lowercase(to_string(link["state"]))));
+  set_field("unifi_parse_status", "parsed");
+end

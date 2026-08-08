@@ -26,7 +26,15 @@ def test_rules_never_remove_fields() -> None:
 def test_cef_parser_uses_graylog_7_compatible_arguments() -> None:
     source = (ROOT / "pipelines" / "rules" / "10-parse-cef.rule").read_text(encoding="utf-8")
     assert "parse_cef(to_string(capture[\"0\"]), true)" in source
+    assert "set_fields(cef)" in source
     assert "use_full_names:" not in source
+
+
+def test_rules_do_not_use_an_if_function() -> None:
+    sources = "\n".join(
+        path.read_text(encoding="utf-8") for path in (ROOT / "pipelines" / "rules").glob("*.rule")
+    )
+    assert "if(" not in sources
 
 
 def test_cef_and_gim_severity_lookups_are_complete() -> None:

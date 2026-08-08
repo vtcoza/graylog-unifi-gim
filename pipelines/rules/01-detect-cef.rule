@@ -1,0 +1,11 @@
+rule "UniFi - detect CEF"
+when
+  has_field("unifi_ingest") &&
+  regex(
+    pattern: "(?:^|\\s)(CEF:\\d+\\|Ubiquiti\\|UniFi Network\\|.*)$",
+    value: to_string($message.message)
+  ).matches == true
+then
+  set_field("unifi_log_format", "cef");
+  set_field("unifi_parse_status", "detected");
+end

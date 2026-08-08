@@ -1,0 +1,11 @@
+rule "UniFi - normalize syslog priority"
+when
+  has_field("unifi_syslog_priority")
+then
+  let priority = to_long($message.unifi_syslog_priority);
+  let severity_code = priority % 8;
+  set_field("unifi_syslog_priority", priority);
+  set_field("unifi_syslog_facility", priority / 8);
+  set_field("unifi_syslog_severity_code", severity_code);
+  set_field("unifi_severity", lowercase(to_string(syslog_level(severity_code))));
+end

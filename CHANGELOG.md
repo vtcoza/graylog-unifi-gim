@@ -9,6 +9,8 @@ Semantic Versioning.
 
 - Use Graylog 7-compatible positional arguments for `parse_cef` and wait for
   the installed UDP input before the Docker release gate replays fixtures.
+- Replace unsupported conditional expressions with signature-specific Graylog
+  rules and normalize RFC 3164 priority values in the live pipeline.
 
 ### Planned
 

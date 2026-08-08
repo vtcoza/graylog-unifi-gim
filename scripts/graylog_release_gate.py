@@ -91,19 +91,25 @@ def import_pack(base: str, user: str, password: str, pack: dict[str, Any], udp_p
     )
 
 
-def wait_input_running(base: str, user: str, password: str, timeout: int = 60) -> None:
-    """Wait until the installed UniFi UDP input is accepting datagrams."""
+def wait_input_available(
+    base: str,
+    user: str,
+    password: str,
+    timeout: int = 60,
+    settle_seconds: float = 2,
+) -> None:
+    """Wait until the installed UniFi UDP input is visible, then let it bind."""
     deadline = time.monotonic() + timeout
-    last_states: Any = None
+    last_inputs: Any = None
     while time.monotonic() < deadline:
-        last_states = request(base, user, password, "GET", "/api/system/inputstates")
-        states = last_states.get("states", []) if isinstance(last_states, dict) else []
-        for entry in states:
-            message_input = entry.get("message_input", {})
-            if message_input.get("title") == "UniFi - Mixed Raw UDP" and entry.get("state") == "RUNNING":
+        last_inputs = request(base, user, password, "GET", "/api/system/inputs")
+        inputs = last_inputs.get("inputs", []) if isinstance(last_inputs, dict) else []
+        for entry in inputs:
+            if entry.get("title") == "UniFi - Mixed Raw UDP":
+                time.sleep(settle_seconds)
                 return
         time.sleep(1)
-    raise RuntimeError(f"UniFi UDP input did not reach RUNNING: {last_states!r}")
+    raise RuntimeError(f"UniFi UDP input was not listed after installation: {last_inputs!r}")
 
 
 def replay(root: Path, host: str, port: int) -> int:
@@ -168,7 +174,7 @@ def main() -> int:
     if args.variant == "assets-only":
         print("Assets-only import validated; UDP replay requires a separately configured input.")
         return 0
-    wait_input_running(args.url, args.user, args.password)
+    wait_input_available(args.url, args.user, args.password)
     expected = replay(args.root, args.udp_host, args.udp_port)
     assert_search(args.url, args.user, args.password, expected)
     print(f"validated {args.variant}: {expected} fixtures")

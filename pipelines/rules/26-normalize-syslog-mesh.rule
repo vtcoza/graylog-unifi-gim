@@ -1,0 +1,13 @@
+rule "UniFi - normalize wireless mesh timeout"
+when
+  has_field("unifi_vendor_message") &&
+  contains(
+    value: to_string($message.unifi_vendor_message),
+    search: "ace_reporter.mesh_halt_timeout(): Mesh halt expired"
+  )
+then
+  set_field("unifi_mesh_timeout", true);
+  set_field("event_action", "timeout");
+  set_field("unifi_event_type", "wireless.mesh.timeout");
+  set_field("unifi_parse_status", "parsed");
+end

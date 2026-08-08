@@ -1999,7 +1999,7 @@
       "id": "8224fc48-f00f-5085-9de6-80a7f808101f",
       "data": {
         "name": "UNIFI_DEVICE_HEADER",
-        "pattern": "%{NOTSPACE:host_name} %{UNIFI_MAC12:unifi_device_mac},%{GREEDYDATA:unifi_device_model}-%{UNIFI_VERSION:unifi_device_version}: %{GREEDYDATA:unifi_vendor_message}"
+        "pattern": "(?:<%{NUMBER:unifi_syslog_priority}>)?%{NOTSPACE:host_name} %{UNIFI_MAC12:unifi_device_mac},%{GREEDYDATA:unifi_device_model}-%{UNIFI_VERSION:unifi_device_version}: %{GREEDYDATA:unifi_vendor_message}"
       },
       "constraints": [
         {
@@ -2782,7 +2782,7 @@
         },
         "source": {
           "@type": "string",
-          "@value": "pipeline \"UniFi GIM\"\nstage 0 match all\n  rule \"UniFi - detect mixed format\"\nstage 10 match either\n  rule \"UniFi - parse CEF\"\n  rule \"UniFi - parse device syslog header\"\nstage 20 match either\n  rule \"UniFi - normalize CEF client events\"\n  rule \"UniFi - normalize device syslog families\"\nstage 30 match all\n  rule \"UniFi - normalize severity to GIM\"\nstage 40 match all\n  rule \"UniFi - route normalized messages\"\nstage 41 match either\n  rule \"UniFi - route unsupported messages\"\n  rule \"UniFi - route CEF messages\"\n  rule \"UniFi - route syslog messages\"\nend\n"
+          "@value": "pipeline \"UniFi GIM\"\nstage 0 match all\n  rule \"UniFi - initialize mixed input\"\nstage 1 match either\n  rule \"UniFi - detect CEF\"\n  rule \"UniFi - detect device syslog\"\n  rule \"UniFi - retain malformed input\"\nstage 10 match either\n  rule \"UniFi - parse CEF\"\n  rule \"UniFi - parse device syslog header\"\nstage 20 match either\n  rule \"UniFi - normalize CEF client connected\"\n  rule \"UniFi - normalize CEF client disconnected\"\n  rule \"UniFi - normalize switch port link\"\n  rule \"UniFi - normalize switch spanning tree\"\n  rule \"UniFi - normalize wireless client associated\"\n  rule \"UniFi - normalize wireless client disassociated\"\n  rule \"UniFi - normalize wireless mesh timeout\"\n  rule \"UniFi - normalize device reboot\"\n  rule \"UniFi - normalize syslog priority\"\n  rule \"UniFi - continue vendor normalization\"\nstage 30 match all\n  rule \"UniFi - normalize severity to GIM\"\nstage 40 match all\n  rule \"UniFi - route normalized messages\"\nstage 41 match either\n  rule \"UniFi - route unsupported messages\"\n  rule \"UniFi - route CEF messages\"\n  rule \"UniFi - route syslog messages\"\nend\n"
         },
         "connected_streams": [
           {
@@ -2790,6 +2790,34 @@
             "@value": "78261a1d-0113-5fad-8385-0ca42baf9188"
           }
         ]
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "01228507-079d-5f2e-8ede-975a4352eb5c",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - retain malformed input"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/03-retain-malformed.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - retain malformed input\"\nwhen\n  has_field(\"unifi_ingest\") &&\n  regex(\n    pattern: \"(?:^|\\\\s)(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\",\n    value: to_string($message.message)\n  ).matches == false &&\n  regex(\n    pattern: \"^(?:<\\\\d+>)?[^ ]+ [0-9A-Fa-f]{12},.+-\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\+\\\\d+:\",\n    value: to_string($message.message)\n  ).matches == false\nthen\n  route_to_stream(name: \"UniFi - Unsupported\", remove_from_default: false);\nend\n"
+        }
       },
       "constraints": [
         {
@@ -2817,34 +2845,6 @@
         "source": {
           "@type": "string",
           "@value": "rule \"UniFi - normalize severity to GIM\"\nwhen\n  has_field(\"unifi_severity\")\nthen\n  let level = lookup_value(\"unifi_gim_severity_level\", to_string($message.unifi_severity));\n  let name = lookup_value(\"unifi_gim_severity\", to_string($message.unifi_severity));\n  set_field(\"vendor_event_severity\", to_string($message.unifi_severity));\n  set_field(\"event_severity\", to_string(name));\n  set_field(\"event_severity_level\", to_long(level));\nend\n"
-        }
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=7.1.0"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "pipeline_rule",
-        "version": "1"
-      },
-      "id": "1a99d196-22e3-58f0-b1c2-4d0cebb70453",
-      "data": {
-        "title": {
-          "@type": "string",
-          "@value": "UniFi - detect mixed format"
-        },
-        "description": {
-          "@type": "string",
-          "@value": "Generated from pipelines/rules/00-detect-format.rule"
-        },
-        "source": {
-          "@type": "string",
-          "@value": "rule \"UniFi - detect mixed format\"\nwhen\n  has_field(\"unifi_ingest\") && to_bool($message.unifi_ingest)\nthen\n  set_field(\"unifi_schema_version\", \"gim-7.1\");\n  set_field(\"unifi_integration_version\", \"0.1.0\");\n  set_field(\"full_message\", to_string($message.message));\n  let cef = regex(pattern: \"(?:^|\\\\s)(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let device = regex(pattern: \"^[^ ]+ [0-9A-Fa-f]{12},.+-\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\+\\\\d+:\", value: to_string($message.message));\n  set_field(\"unifi_log_format\", if(cef.matches, \"cef\", if(device.matches, \"syslog\", \"unknown\")));\n  set_field(\"unifi_parse_status\", if(cef.matches || device.matches, \"detected\", \"malformed\"));\nend\n"
         }
       },
       "constraints": [
@@ -2888,6 +2888,34 @@
         "name": "pipeline_rule",
         "version": "1"
       },
+      "id": "1ce2c720-a0c0-5df5-9876-36268ceaeb7b",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize syslog priority"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/28-normalize-syslog-priority.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize syslog priority\"\nwhen\n  has_field(\"unifi_syslog_priority\")\nthen\n  let priority = to_long($message.unifi_syslog_priority);\n  let severity_code = priority % 8;\n  set_field(\"unifi_syslog_priority\", priority);\n  set_field(\"unifi_syslog_facility\", priority / 8);\n  set_field(\"unifi_syslog_severity_code\", severity_code);\n  set_field(\"unifi_severity\", lowercase(to_string(syslog_level(severity_code))));\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
       "id": "1f88a746-1947-59df-a876-3f27bf198b99",
       "data": {
         "title": {
@@ -2900,7 +2928,7 @@
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"UniFi - parse device syslog header\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"syslog\"\nthen\n  let header = grok(\n    pattern: \"%{UNIFI_DEVICE_HEADER}\",\n    value: to_string($message.message),\n    only_named_captures: true\n  );\n  set_fields(header);\n  set_field(\"event_source_product\", \"unifi_device\");\n  set_field(\"event_source\", to_string(header[\"host_name\"]));\n  set_field(\"host_mac\", to_string(header[\"unifi_device_mac\"]));\n  set_field(\"host_device_vendor\", \"Ubiquiti\");\n  set_field(\"host_device_model\", to_string(header[\"unifi_device_model\"]));\n  set_field(\"host_os_version\", to_string(header[\"unifi_device_version\"]));\n  set_field(\"unifi_parse_status\", \"unsupported\");\nend\n"
+          "@value": "rule \"UniFi - parse device syslog header\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"syslog\"\nthen\n  let header = grok(\n    pattern: \"%{UNIFI_DEVICE_HEADER}\",\n    value: to_string($message.message),\n    only_named_captures: true\n  );\n  set_fields(header);\n  set_field(\"event_source_product\", \"unifi_device\");\n  set_field(\"event_source\", to_string(header[\"host_name\"]));\n  set_field(\"host_mac\", to_string(header[\"unifi_device_mac\"]));\n  set_field(\"host_device_vendor\", \"Ubiquiti\");\n  set_field(\"host_device_model\", to_string(header[\"unifi_device_model\"]));\n  set_field(\"host_os_version\", to_string(header[\"unifi_device_version\"]));\n  set_field(\"unifi_severity\", \"info\");\n  set_field(\"unifi_parse_status\", \"unsupported\");\nend\n"
         }
       },
       "constraints": [
@@ -2916,19 +2944,19 @@
         "name": "pipeline_rule",
         "version": "1"
       },
-      "id": "5512ac61-0230-5b5e-9b74-735198e1c75d",
+      "id": "250631e6-8005-5b11-af9c-7ecea1a0cdeb",
       "data": {
         "title": {
           "@type": "string",
-          "@value": "UniFi - normalize CEF client events"
+          "@value": "UniFi - detect device syslog"
         },
         "description": {
           "@type": "string",
-          "@value": "Generated from pipelines/rules/20-normalize-cef.rule"
+          "@value": "Generated from pipelines/rules/02-detect-syslog.rule"
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"UniFi - normalize CEF client events\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  set_field(\"event_observer_hostname\", to_string($message.UNIFIhost));\n  set_field(\"event_reporter\", to_string($message.UNIFIhost));\n  set_field(\"event_source\", to_string($message.UNIFIhost));\n  set_field(\"unifi_site_code\", to_string($message.UNIFIsite));\n  set_field(\"source_ip\", to_ip($message.UNIFIclientIp));\n  set_field(\"source_mac\", lowercase(to_string($message.UNIFIclientMac)));\n  set_field(\"network_name\", to_string($message.UNIFInetworkName));\n  set_field(\"network_cidr\", to_string($message.UNIFInetworkSubnet));\n  set_field(\"network_vlan\", to_long($message.UNIFInetworkVlan));\n  set_field(\"gim_event_type_code\", 129999);\n  set_field(\"gim_event_category\", \"network\");\n  set_field(\"gim_event_subcategory\", \"network.default\");\n  set_field(\"gim_event_type\", \"network message\");\n  let connected = to_string($message.device_event_class_id) == \"403\";\n  let disconnected = to_string($message.device_event_class_id) == \"404\";\n  set_field(\"event_action\", if(connected, \"connected\", if(disconnected, \"disconnected\", \"unknown\")));\n  set_field(\"unifi_event_type\", if(connected, \"network.client.connected\", if(disconnected, \"network.client.disconnected\", \"unknown\")));\n  set_field(\"event_code\", to_long($message.device_event_class_id));\n  set_field(\"event_id\", to_string($message.device_event_class_id));\n  set_field(\"unifi_severity\", lookup_value(\"unifi_cef_severity\", to_string($message.severity)));\nend\n"
+          "@value": "rule \"UniFi - detect device syslog\"\nwhen\n  has_field(\"unifi_ingest\") &&\n  regex(\n    pattern: \"^(?:<\\\\d+>)?[^ ]+ [0-9A-Fa-f]{12},.+-\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\+\\\\d+:\",\n    value: to_string($message.message)\n  ).matches == true\nthen\n  set_field(\"unifi_log_format\", \"syslog\");\n  set_field(\"unifi_parse_status\", \"detected\");\nend\n"
         }
       },
       "constraints": [
@@ -2944,19 +2972,215 @@
         "name": "pipeline_rule",
         "version": "1"
       },
-      "id": "7f04689d-5567-5398-b2d2-51a043f7aa46",
+      "id": "290d293d-5eef-55b4-9b3f-14c16193eed4",
       "data": {
         "title": {
           "@type": "string",
-          "@value": "UniFi - normalize device syslog families"
+          "@value": "UniFi - normalize wireless client associated"
         },
         "description": {
           "@type": "string",
-          "@value": "Generated from pipelines/rules/21-normalize-syslog.rule"
+          "@value": "Generated from pipelines/rules/24-normalize-syslog-wlan-associated.rule"
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"UniFi - normalize device syslog families\"\nwhen\n  has_field(\"unifi_vendor_message\")\nthen\n  let text = to_string($message.unifi_vendor_message);\n  let link = regex(pattern: \"Port (?<port>\\\\d+) link (?<state>up|down)$\", value: text);\n  let stp = regex(pattern: \"Port (?<port>\\\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$\", value: text);\n  let wlan = regex(pattern: \"(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\\\.11: (?<state>associated|disassociated)$\", value: text);\n  let mesh = contains(value: text, search: \"ace_reporter.mesh_halt_timeout(): Mesh halt expired\");\n  let reboot = contains(value: text, search: \"ace_reporter.reporter_handle_response_json(): [reboot] reboot\");\n  let known = link.matches || stp.matches || wlan.matches || mesh || reboot;\n  set_field(\"unifi_parse_status\", if(known, \"parsed\", \"unsupported\"));\n  set_field(\"unifi_switch_port\", if(link.matches, to_long(link[\"port\"]), if(stp.matches, to_long(stp[\"port\"]), 0)));\n  set_field(\"source_mac\", if(wlan.matches, lowercase(to_string(wlan[\"client\"])), \"\"));\n  set_field(\"destination_mac\", if(wlan.matches, lowercase(to_string($message.host_mac)), \"\"));\n  set_field(\"destination_hostname\", if(wlan.matches, to_string($message.host_name), \"\"));\n  set_field(\"unifi_wlan_interface\", if(wlan.matches, to_string(wlan[\"interface\"]), \"\"));\n  set_field(\"unifi_mesh_timeout\", mesh);\n  set_field(\"event_action\", if(link.matches, lowercase(to_string(link[\"state\"])), if(stp.matches, lowercase(to_string(stp[\"state\"])), if(wlan.matches, if(to_string(wlan[\"state\"]) == \"associated\", \"connected\", \"disconnected\"), if(mesh, \"timeout\", if(reboot, \"reboot\", \"unknown\"))))));\n  set_field(\"unifi_event_type\", if(link.matches, concat(\"network.port.\", lowercase(to_string(link[\"state\"]))), if(stp.matches, concat(\"network.port.\", lowercase(to_string(stp[\"state\"]))), if(wlan.matches, if(to_string(wlan[\"state\"]) == \"associated\", \"network.client.connected\", \"network.client.disconnected\"), if(mesh, \"wireless.mesh.timeout\", if(reboot, \"device.reboot\", \"unknown\"))))));\nend\n"
+          "@value": "rule \"UniFi - normalize wireless client associated\"\nwhen\n  has_field(\"unifi_vendor_message\") &&\n  regex(\n    pattern: \"(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\\\.11: associated$\",\n    value: to_string($message.unifi_vendor_message)\n  ).matches == true\nthen\n  let wlan = regex(\n    pattern: \"(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\\\.11: associated$\",\n    value: to_string($message.unifi_vendor_message)\n  );\n  set_field(\"source_mac\", lowercase(to_string(wlan[\"client\"])));\n  set_field(\"destination_mac\", lowercase(to_string($message.host_mac)));\n  set_field(\"destination_hostname\", to_string($message.host_name));\n  set_field(\"unifi_wlan_interface\", to_string(wlan[\"interface\"]));\n  set_field(\"event_action\", \"connected\");\n  set_field(\"unifi_event_type\", \"network.client.connected\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "30e7edab-3251-590b-ad08-b57f51b559f1",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - detect CEF"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/01-detect-cef.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - detect CEF\"\nwhen\n  has_field(\"unifi_ingest\") &&\n  regex(\n    pattern: \"(?:^|\\\\s)(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\",\n    value: to_string($message.message)\n  ).matches == true\nthen\n  set_field(\"unifi_log_format\", \"cef\");\n  set_field(\"unifi_parse_status\", \"detected\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "33b95257-e895-543b-ac4c-a64c0459c7fe",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize wireless mesh timeout"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/26-normalize-syslog-mesh.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize wireless mesh timeout\"\nwhen\n  has_field(\"unifi_vendor_message\") &&\n  contains(\n    value: to_string($message.unifi_vendor_message),\n    search: \"ace_reporter.mesh_halt_timeout(): Mesh halt expired\"\n  )\nthen\n  set_field(\"unifi_mesh_timeout\", true);\n  set_field(\"event_action\", \"timeout\");\n  set_field(\"unifi_event_type\", \"wireless.mesh.timeout\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "42280b44-aa3e-556d-bca2-7b2e7ea04627",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize CEF client connected"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/20-normalize-cef-connected.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize CEF client connected\"\nwhen\n  has_field(\"unifi_log_format\") &&\n  to_string($message.unifi_log_format) == \"cef\" &&\n  to_string($message.device_event_class_id) == \"403\"\nthen\n  set_field(\"event_observer_hostname\", to_string($message.UNIFIhost));\n  set_field(\"event_reporter\", to_string($message.UNIFIhost));\n  set_field(\"event_source\", to_string($message.UNIFIhost));\n  set_field(\"unifi_site_code\", to_string($message.UNIFIsite));\n  set_field(\"source_ip\", to_ip($message.UNIFIclientIp));\n  set_field(\"source_mac\", lowercase(to_string($message.UNIFIclientMac)));\n  set_field(\"network_name\", to_string($message.UNIFInetworkName));\n  set_field(\"network_cidr\", to_string($message.UNIFInetworkSubnet));\n  set_field(\"network_vlan\", to_long($message.UNIFInetworkVlan));\n  set_field(\"gim_event_type_code\", 129999);\n  set_field(\"gim_event_category\", \"network\");\n  set_field(\"gim_event_subcategory\", \"network.default\");\n  set_field(\"gim_event_type\", \"network message\");\n  set_field(\"event_action\", \"connected\");\n  set_field(\"unifi_event_type\", \"network.client.connected\");\n  set_field(\"event_code\", to_long($message.device_event_class_id));\n  set_field(\"event_id\", to_string($message.device_event_class_id));\n  set_field(\"unifi_severity\", lookup_value(\"unifi_cef_severity\", to_string($message.severity)));\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "44772edd-45b0-575f-be6c-0936f37551fc",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - initialize mixed input"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/00-initialize.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - initialize mixed input\"\nwhen\n  has_field(\"unifi_ingest\") && to_bool($message.unifi_ingest)\nthen\n  set_field(\"unifi_schema_version\", \"gim-7.1\");\n  set_field(\"unifi_integration_version\", \"0.1.0\");\n  set_field(\"full_message\", to_string($message.message));\n  set_field(\"unifi_log_format\", \"unknown\");\n  set_field(\"unifi_parse_status\", \"malformed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "4bc9f51a-4187-59d3-a034-a0be2866be8f",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize switch spanning tree"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/23-normalize-syslog-stp.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize switch spanning tree\"\nwhen\n  has_field(\"unifi_vendor_message\") &&\n  regex(\n    pattern: \"Port (?<port>\\\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$\",\n    value: to_string($message.unifi_vendor_message)\n  ).matches == true\nthen\n  let stp = regex(\n    pattern: \"Port (?<port>\\\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$\",\n    value: to_string($message.unifi_vendor_message)\n  );\n  set_field(\"unifi_switch_port\", to_long(stp[\"port\"]));\n  set_field(\"unifi_switch_previous_state\", lowercase(to_string(stp[\"previous\"])));\n  set_field(\"event_action\", lowercase(to_string(stp[\"state\"])));\n  set_field(\"unifi_event_type\", concat(\"network.port.\", lowercase(to_string(stp[\"state\"]))));\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "54ca2a43-65d1-58e2-b3ac-f1ab8fdc8e5f",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize CEF client disconnected"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/21-normalize-cef-disconnected.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize CEF client disconnected\"\nwhen\n  has_field(\"unifi_log_format\") &&\n  to_string($message.unifi_log_format) == \"cef\" &&\n  to_string($message.device_event_class_id) == \"404\"\nthen\n  set_field(\"event_observer_hostname\", to_string($message.UNIFIhost));\n  set_field(\"event_reporter\", to_string($message.UNIFIhost));\n  set_field(\"event_source\", to_string($message.UNIFIhost));\n  set_field(\"unifi_site_code\", to_string($message.UNIFIsite));\n  set_field(\"source_ip\", to_ip($message.UNIFIclientIp));\n  set_field(\"source_mac\", lowercase(to_string($message.UNIFIclientMac)));\n  set_field(\"network_name\", to_string($message.UNIFInetworkName));\n  set_field(\"network_cidr\", to_string($message.UNIFInetworkSubnet));\n  set_field(\"network_vlan\", to_long($message.UNIFInetworkVlan));\n  set_field(\"gim_event_type_code\", 129999);\n  set_field(\"gim_event_category\", \"network\");\n  set_field(\"gim_event_subcategory\", \"network.default\");\n  set_field(\"gim_event_type\", \"network message\");\n  set_field(\"event_action\", \"disconnected\");\n  set_field(\"unifi_event_type\", \"network.client.disconnected\");\n  set_field(\"event_code\", to_long($message.device_event_class_id));\n  set_field(\"event_id\", to_string($message.device_event_class_id));\n  set_field(\"unifi_severity\", lookup_value(\"unifi_cef_severity\", to_string($message.severity)));\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "7bfe7a31-c054-5d9a-8508-71d6a57db8d6",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - continue vendor normalization"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/29-continue-normalization.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - continue vendor normalization\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) != \"unknown\"\nthen\n  set_field(\"unifi_pipeline_stage\", \"normalized\");\nend\n"
         }
       },
       "constraints": [
@@ -3012,7 +3236,7 @@
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"UniFi - parse CEF\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  let capture = regex(pattern: \"(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let cef = parse_cef(to_string(capture[\"0\"]), true);\n  set_fields(to_map(cef));\n  set_field(\"event_source_product\", \"unifi_network\");\n  set_field(\"vendor_name\", \"Ubiquiti\");\n  set_field(\"vendor_product\", \"UniFi Network\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+          "@value": "rule \"UniFi - parse CEF\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  let capture = regex(pattern: \"(CEF:\\\\d+\\\\|Ubiquiti\\\\|UniFi Network\\\\|.*)$\", value: to_string($message.message));\n  let cef = parse_cef(to_string(capture[\"0\"]), true);\n  set_fields(cef);\n  set_field(\"event_source_product\", \"unifi_network\");\n  set_field(\"vendor_name\", \"Ubiquiti\");\n  set_field(\"vendor_product\", \"UniFi Network\");\n  set_field(\"unifi_severity\", \"info\");\n  set_field(\"unifi_parse_status\", \"unsupported\");\nend\n"
         }
       },
       "constraints": [
@@ -3056,6 +3280,62 @@
         "name": "pipeline_rule",
         "version": "1"
       },
+      "id": "badac0f5-2965-5631-90ca-559d3ec36235",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize device reboot"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/27-normalize-syslog-reboot.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize device reboot\"\nwhen\n  has_field(\"unifi_vendor_message\") &&\n  contains(\n    value: to_string($message.unifi_vendor_message),\n    search: \"ace_reporter.reporter_handle_response_json(): [reboot] reboot\"\n  )\nthen\n  set_field(\"event_action\", \"reboot\");\n  set_field(\"unifi_event_type\", \"device.reboot\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "d941c34b-b092-59b8-af3f-cef3284d45a2",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize switch port link"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/22-normalize-syslog-link.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize switch port link\"\nwhen\n  has_field(\"unifi_vendor_message\") &&\n  regex(\n    pattern: \"Port (?<port>\\\\d+) link (?<state>up|down)$\",\n    value: to_string($message.unifi_vendor_message)\n  ).matches == true\nthen\n  let link = regex(\n    pattern: \"Port (?<port>\\\\d+) link (?<state>up|down)$\",\n    value: to_string($message.unifi_vendor_message)\n  );\n  set_field(\"unifi_switch_port\", to_long(link[\"port\"]));\n  set_field(\"event_action\", lowercase(to_string(link[\"state\"])));\n  set_field(\"unifi_event_type\", concat(\"network.port.\", lowercase(to_string(link[\"state\"]))));\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
       "id": "da57c38e-21a4-5425-a06d-029e286fd163",
       "data": {
         "title": {
@@ -3069,6 +3349,34 @@
         "source": {
           "@type": "string",
           "@value": "rule \"UniFi - route CEF messages\"\nwhen\n  has_field(\"unifi_log_format\") && to_string($message.unifi_log_format) == \"cef\"\nthen\n  route_to_stream(name: \"UniFi - CEF\", remove_from_default: false);\nend\n"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=7.1.0"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "f443266c-625d-55ee-b88a-d33e374facac",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "UniFi - normalize wireless client disassociated"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Generated from pipelines/rules/25-normalize-syslog-wlan-disassociated.rule"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"UniFi - normalize wireless client disassociated\"\nwhen\n  has_field(\"unifi_vendor_message\") &&\n  regex(\n    pattern: \"(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\\\.11: disassociated$\",\n    value: to_string($message.unifi_vendor_message)\n  ).matches == true\nthen\n  let wlan = regex(\n    pattern: \"(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\\\.11: disassociated$\",\n    value: to_string($message.unifi_vendor_message)\n  );\n  set_field(\"source_mac\", lowercase(to_string(wlan[\"client\"])));\n  set_field(\"destination_mac\", lowercase(to_string($message.host_mac)));\n  set_field(\"destination_hostname\", to_string($message.host_name));\n  set_field(\"unifi_wlan_interface\", to_string(wlan[\"interface\"]));\n  set_field(\"event_action\", \"disconnected\");\n  set_field(\"unifi_event_type\", \"network.client.disconnected\");\n  set_field(\"unifi_parse_status\", \"parsed\");\nend\n"
         }
       },
       "constraints": [

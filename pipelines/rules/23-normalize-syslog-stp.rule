@@ -1,0 +1,18 @@
+rule "UniFi - normalize switch spanning tree"
+when
+  has_field("unifi_vendor_message") &&
+  regex(
+    pattern: "Port (?<port>\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$",
+    value: to_string($message.unifi_vendor_message)
+  ).matches == true
+then
+  let stp = regex(
+    pattern: "Port (?<port>\\d+) moving from (?<previous>[A-Za-z]+) to (?<state>[A-Za-z]+)$",
+    value: to_string($message.unifi_vendor_message)
+  );
+  set_field("unifi_switch_port", to_long(stp["port"]));
+  set_field("unifi_switch_previous_state", lowercase(to_string(stp["previous"])));
+  set_field("event_action", lowercase(to_string(stp["state"])));
+  set_field("unifi_event_type", concat("network.port.", lowercase(to_string(stp["state"]))));
+  set_field("unifi_parse_status", "parsed");
+end

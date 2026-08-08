@@ -1,0 +1,12 @@
+rule "UniFi - normalize device reboot"
+when
+  has_field("unifi_vendor_message") &&
+  contains(
+    value: to_string($message.unifi_vendor_message),
+    search: "ace_reporter.reporter_handle_response_json(): [reboot] reboot"
+  )
+then
+  set_field("event_action", "reboot");
+  set_field("unifi_event_type", "device.reboot");
+  set_field("unifi_parse_status", "parsed");
+end

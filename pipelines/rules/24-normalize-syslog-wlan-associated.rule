@@ -1,0 +1,20 @@
+rule "UniFi - normalize wireless client associated"
+when
+  has_field("unifi_vendor_message") &&
+  regex(
+    pattern: "(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\.11: associated$",
+    value: to_string($message.unifi_vendor_message)
+  ).matches == true
+then
+  let wlan = regex(
+    pattern: "(?<interface>[^:]+): STA (?<client>[0-9A-Fa-f:]{17}) IEEE 802\\.11: associated$",
+    value: to_string($message.unifi_vendor_message)
+  );
+  set_field("source_mac", lowercase(to_string(wlan["client"])));
+  set_field("destination_mac", lowercase(to_string($message.host_mac)));
+  set_field("destination_hostname", to_string($message.host_name));
+  set_field("unifi_wlan_interface", to_string(wlan["interface"]));
+  set_field("event_action", "connected");
+  set_field("unifi_event_type", "network.client.connected");
+  set_field("unifi_parse_status", "parsed");
+end

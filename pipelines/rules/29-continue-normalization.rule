@@ -1,0 +1,6 @@
+rule "UniFi - continue vendor normalization"
+when
+  has_field("unifi_log_format") && to_string($message.unifi_log_format) != "unknown"
+then
+  set_field("unifi_pipeline_stage", "normalized");
+end

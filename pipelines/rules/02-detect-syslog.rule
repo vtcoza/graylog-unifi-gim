@@ -1,0 +1,11 @@
+rule "UniFi - detect device syslog"
+when
+  has_field("unifi_ingest") &&
+  regex(
+    pattern: "^(?:<\\d+>)?[^ ]+ [0-9A-Fa-f]{12},.+-\\d+\\.\\d+\\.\\d+\\+\\d+:",
+    value: to_string($message.message)
+  ).matches == true
+then
+  set_field("unifi_log_format", "syslog");
+  set_field("unifi_parse_status", "detected");
+end

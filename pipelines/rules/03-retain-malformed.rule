@@ -1,0 +1,14 @@
+rule "UniFi - retain malformed input"
+when
+  has_field("unifi_ingest") &&
+  regex(
+    pattern: "(?:^|\\s)(CEF:\\d+\\|Ubiquiti\\|UniFi Network\\|.*)$",
+    value: to_string($message.message)
+  ).matches == false &&
+  regex(
+    pattern: "^(?:<\\d+>)?[^ ]+ [0-9A-Fa-f]{12},.+-\\d+\\.\\d+\\.\\d+\\+\\d+:",
+    value: to_string($message.message)
+  ).matches == false
+then
+  route_to_stream(name: "UniFi - Unsupported", remove_from_default: false);
+end

@@ -1,12 +1,24 @@
 pipeline "UniFi GIM"
 stage 0 match all
-  rule "UniFi - detect mixed format"
+  rule "UniFi - initialize mixed input"
+stage 1 match either
+  rule "UniFi - detect CEF"
+  rule "UniFi - detect device syslog"
+  rule "UniFi - retain malformed input"
 stage 10 match either
   rule "UniFi - parse CEF"
   rule "UniFi - parse device syslog header"
 stage 20 match either
-  rule "UniFi - normalize CEF client events"
-  rule "UniFi - normalize device syslog families"
+  rule "UniFi - normalize CEF client connected"
+  rule "UniFi - normalize CEF client disconnected"
+  rule "UniFi - normalize switch port link"
+  rule "UniFi - normalize switch spanning tree"
+  rule "UniFi - normalize wireless client associated"
+  rule "UniFi - normalize wireless client disassociated"
+  rule "UniFi - normalize wireless mesh timeout"
+  rule "UniFi - normalize device reboot"
+  rule "UniFi - normalize syslog priority"
+  rule "UniFi - continue vendor normalization"
 stage 30 match all
   rule "UniFi - normalize severity to GIM"
 stage 40 match all

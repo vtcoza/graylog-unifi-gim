@@ -14,5 +14,6 @@ then
   set_field("host_device_vendor", "Ubiquiti");
   set_field("host_device_model", to_string(header["unifi_device_model"]));
   set_field("host_os_version", to_string(header["unifi_device_version"]));
+  set_field("unifi_severity", "info");
   set_field("unifi_parse_status", "unsupported");
 end

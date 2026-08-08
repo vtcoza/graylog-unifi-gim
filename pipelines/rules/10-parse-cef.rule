@@ -4,9 +4,10 @@ when
 then
   let capture = regex(pattern: "(CEF:\\d+\\|Ubiquiti\\|UniFi Network\\|.*)$", value: to_string($message.message));
   let cef = parse_cef(to_string(capture["0"]), true);
-  set_fields(to_map(cef));
+  set_fields(cef);
   set_field("event_source_product", "unifi_network");
   set_field("vendor_name", "Ubiquiti");
   set_field("vendor_product", "UniFi Network");
-  set_field("unifi_parse_status", "parsed");
+  set_field("unifi_severity", "info");
+  set_field("unifi_parse_status", "unsupported");
 end
