@@ -49,3 +49,17 @@ def test_dashboard_v2_entities_have_native_search_state() -> None:
         assert data["type"] == "DASHBOARD"
         assert data["search"]["queries"][0]["search_types"]
         assert data["state"]
+
+
+def test_entity_shapes_match_graylog_7_models() -> None:
+    entities = build_pack(ROOT, "with-input")["entities"]
+    grok = next(entity for entity in entities if entity["type"]["name"] == "grok_pattern")
+    assert isinstance(grok["data"]["name"], str)
+    input_entity = next(entity for entity in entities if entity["type"]["name"] == "input")
+    assert input_entity["data"]["extractors"] == []
+    events = [entity for entity in entities if entity["type"]["name"] == "event_definition"]
+    assert events
+    for event in events:
+        assert event["data"]["is_scheduled"] == {"@type": "boolean", "@value": False}
+        assert event["data"]["config"]["type"] == "aggregation-v1"
+        assert event["data"]["config"]["streams"] == ["0a57ef15-0a43-565e-b927-1109b7df1d29"]

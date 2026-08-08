@@ -79,7 +79,7 @@ def _grok_entities(root: Path) -> list[dict[str, Any]]:
             _entity(
                 "grok_pattern",
                 _id("grok_pattern", path.stem),
-                {"name": _typed(path.stem), "pattern": _typed(path.read_text(encoding="utf-8").strip())},
+                {"name": path.stem, "pattern": path.read_text(encoding="utf-8").strip()},
             )
         )
     return entities
@@ -115,6 +115,7 @@ def _stream_entities(root: Path) -> list[dict[str, Any]]:
                     "disabled": _typed(False),
                     "description": _typed(stream["description"]),
                     "default_stream": _typed(False),
+                    "favorite_fields": [],
                 },
             )
         )
@@ -199,29 +200,34 @@ def _event_entities(root: Path) -> list[dict[str, Any]]:
     definitions = json.loads((root / "events" / "event-definitions.json").read_text(encoding="utf-8"))
     entities = []
     for item in definitions:
-        # Graylog's aggregation-v1 entity shape is retained as typed source data.
         config = {
-            "type": _typed("aggregation-v1"),
+            "type": "aggregation-v1",
             "query": _typed(item["query"]),
             "query_parameters": [],
-            "streams": [_typed("0a57ef15-0a43-565e-b927-1109b7df1d29")],
-            "group_by": [_typed(field) for field in item["group_by"]],
+            "filters": [],
+            "streams": ["0a57ef15-0a43-565e-b927-1109b7df1d29"],
+            "stream_categories": [],
+            "group_by": item["group_by"],
             "series": [
                 {
-                    "id": _typed("count"),
-                    "function": _typed("count"),
-                    "field": _typed("")
+                    "id": "count",
+                    "type": "count",
+                    "field": None,
                 }
             ],
             "conditions": {
                 "expression": {
-                    "expr": _typed(">="),
-                    "left": {"expr": _typed("number-ref"), "ref": _typed("count")},
-                    "right": {"expr": _typed("number"), "value": _typed(item["threshold"], "double")}
+                    "expr": ">=",
+                    "left": {"expr": "number-ref", "ref": "count"},
+                    "right": {"expr": "number", "value": item["threshold"]},
                 }
             },
-            "search_within_ms": _typed(item["search_within_ms"], "long"),
-            "execute_every_ms": _typed(item["execute_every_ms"], "long"),
+            "search_within_ms": item["search_within_ms"],
+            "execute_every_ms": item["execute_every_ms"],
+            "use_cron_scheduling": False,
+            "cron_expression": None,
+            "cron_timezone": None,
+            "event_limit": 0,
         }
         entities.append(
             _entity(
@@ -235,11 +241,11 @@ def _event_entities(root: Path) -> list[dict[str, Any]]:
                     "config": config,
                     "field_spec": {},
                     "key_spec": [],
-                    "notification_settings": {"grace_period_ms": _typed(0, "long"), "backlog_size": _typed(0)},
+                    "notification_settings": {"grace_period_ms": 0, "backlog_size": 0},
                     "notifications": [],
                     "remediation_steps": _typed("Review the source message and affected UniFi device."),
                     "storage": [],
-                    "enabled": _typed(False),
+                    "is_scheduled": _typed(False),
                 },
             )
         )
@@ -378,9 +384,9 @@ def _input_entity() -> dict[str, Any]:
                 "number_worker_threads": _typed(2),
                 "override_source": _typed(""),
                 "charset_name": _typed("UTF-8"),
-                "static_fields": {"unifi_ingest": _typed("true")},
             },
             "static_fields": {"unifi_ingest": _typed("true")},
+            "extractors": [],
         },
     )
 

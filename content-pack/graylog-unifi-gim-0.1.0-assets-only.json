@@ -1654,91 +1654,52 @@
           "@value": false
         },
         "config": {
-          "type": {
-            "@type": "string",
-            "@value": "aggregation-v1"
-          },
+          "type": "aggregation-v1",
           "query": {
             "@type": "string",
             "@value": "unifi_event_type:\"wireless.mesh.timeout\""
           },
           "query_parameters": [],
+          "filters": [],
           "streams": [
-            {
-              "@type": "string",
-              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
-            }
+            "0a57ef15-0a43-565e-b927-1109b7df1d29"
           ],
+          "stream_categories": [],
           "group_by": [
-            {
-              "@type": "string",
-              "@value": "host_name"
-            }
+            "host_name"
           ],
           "series": [
             {
-              "id": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "function": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "field": {
-                "@type": "string",
-                "@value": ""
-              }
+              "id": "count",
+              "type": "count",
+              "field": null
             }
           ],
           "conditions": {
             "expression": {
-              "expr": {
-                "@type": "string",
-                "@value": ">="
-              },
+              "expr": ">=",
               "left": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number-ref"
-                },
-                "ref": {
-                  "@type": "string",
-                  "@value": "count"
-                }
+                "expr": "number-ref",
+                "ref": "count"
               },
               "right": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number"
-                },
-                "value": {
-                  "@type": "double",
-                  "@value": 1
-                }
+                "expr": "number",
+                "value": 1
               }
             }
           },
-          "search_within_ms": {
-            "@type": "long",
-            "@value": 300000
-          },
-          "execute_every_ms": {
-            "@type": "long",
-            "@value": 60000
-          }
+          "search_within_ms": 300000,
+          "execute_every_ms": 60000,
+          "use_cron_scheduling": false,
+          "cron_expression": null,
+          "cron_timezone": null,
+          "event_limit": 0
         },
         "field_spec": {},
         "key_spec": [],
         "notification_settings": {
-          "grace_period_ms": {
-            "@type": "long",
-            "@value": 0
-          },
-          "backlog_size": {
-            "@type": "integer",
-            "@value": 0
-          }
+          "grace_period_ms": 0,
+          "backlog_size": 0
         },
         "notifications": [],
         "remediation_steps": {
@@ -1746,7 +1707,7 @@
           "@value": "Review the source message and affected UniFi device."
         },
         "storage": [],
-        "enabled": {
+        "is_scheduled": {
           "@type": "boolean",
           "@value": false
         }
@@ -1783,95 +1744,53 @@
           "@value": false
         },
         "config": {
-          "type": {
-            "@type": "string",
-            "@value": "aggregation-v1"
-          },
+          "type": "aggregation-v1",
           "query": {
             "@type": "string",
             "@value": "unifi_event_type:(\"network.port.up\" OR \"network.port.down\")"
           },
           "query_parameters": [],
+          "filters": [],
           "streams": [
-            {
-              "@type": "string",
-              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
-            }
+            "0a57ef15-0a43-565e-b927-1109b7df1d29"
           ],
+          "stream_categories": [],
           "group_by": [
-            {
-              "@type": "string",
-              "@value": "host_name"
-            },
-            {
-              "@type": "string",
-              "@value": "unifi_switch_port"
-            }
+            "host_name",
+            "unifi_switch_port"
           ],
           "series": [
             {
-              "id": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "function": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "field": {
-                "@type": "string",
-                "@value": ""
-              }
+              "id": "count",
+              "type": "count",
+              "field": null
             }
           ],
           "conditions": {
             "expression": {
-              "expr": {
-                "@type": "string",
-                "@value": ">="
-              },
+              "expr": ">=",
               "left": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number-ref"
-                },
-                "ref": {
-                  "@type": "string",
-                  "@value": "count"
-                }
+                "expr": "number-ref",
+                "ref": "count"
               },
               "right": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number"
-                },
-                "value": {
-                  "@type": "double",
-                  "@value": 4
-                }
+                "expr": "number",
+                "value": 4
               }
             }
           },
-          "search_within_ms": {
-            "@type": "long",
-            "@value": 300000
-          },
-          "execute_every_ms": {
-            "@type": "long",
-            "@value": 60000
-          }
+          "search_within_ms": 300000,
+          "execute_every_ms": 60000,
+          "use_cron_scheduling": false,
+          "cron_expression": null,
+          "cron_timezone": null,
+          "event_limit": 0
         },
         "field_spec": {},
         "key_spec": [],
         "notification_settings": {
-          "grace_period_ms": {
-            "@type": "long",
-            "@value": 0
-          },
-          "backlog_size": {
-            "@type": "integer",
-            "@value": 0
-          }
+          "grace_period_ms": 0,
+          "backlog_size": 0
         },
         "notifications": [],
         "remediation_steps": {
@@ -1879,7 +1798,7 @@
           "@value": "Review the source message and affected UniFi device."
         },
         "storage": [],
-        "enabled": {
+        "is_scheduled": {
           "@type": "boolean",
           "@value": false
         }
@@ -1916,91 +1835,52 @@
           "@value": false
         },
         "config": {
-          "type": {
-            "@type": "string",
-            "@value": "aggregation-v1"
-          },
+          "type": "aggregation-v1",
           "query": {
             "@type": "string",
             "@value": "unifi_event_type:\"network.client.disconnected\""
           },
           "query_parameters": [],
+          "filters": [],
           "streams": [
-            {
-              "@type": "string",
-              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
-            }
+            "0a57ef15-0a43-565e-b927-1109b7df1d29"
           ],
+          "stream_categories": [],
           "group_by": [
-            {
-              "@type": "string",
-              "@value": "source_mac"
-            }
+            "source_mac"
           ],
           "series": [
             {
-              "id": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "function": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "field": {
-                "@type": "string",
-                "@value": ""
-              }
+              "id": "count",
+              "type": "count",
+              "field": null
             }
           ],
           "conditions": {
             "expression": {
-              "expr": {
-                "@type": "string",
-                "@value": ">="
-              },
+              "expr": ">=",
               "left": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number-ref"
-                },
-                "ref": {
-                  "@type": "string",
-                  "@value": "count"
-                }
+                "expr": "number-ref",
+                "ref": "count"
               },
               "right": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number"
-                },
-                "value": {
-                  "@type": "double",
-                  "@value": 5
-                }
+                "expr": "number",
+                "value": 5
               }
             }
           },
-          "search_within_ms": {
-            "@type": "long",
-            "@value": 600000
-          },
-          "execute_every_ms": {
-            "@type": "long",
-            "@value": 60000
-          }
+          "search_within_ms": 600000,
+          "execute_every_ms": 60000,
+          "use_cron_scheduling": false,
+          "cron_expression": null,
+          "cron_timezone": null,
+          "event_limit": 0
         },
         "field_spec": {},
         "key_spec": [],
         "notification_settings": {
-          "grace_period_ms": {
-            "@type": "long",
-            "@value": 0
-          },
-          "backlog_size": {
-            "@type": "integer",
-            "@value": 0
-          }
+          "grace_period_ms": 0,
+          "backlog_size": 0
         },
         "notifications": [],
         "remediation_steps": {
@@ -2008,7 +1888,7 @@
           "@value": "Review the source message and affected UniFi device."
         },
         "storage": [],
-        "enabled": {
+        "is_scheduled": {
           "@type": "boolean",
           "@value": false
         }
@@ -2045,91 +1925,52 @@
           "@value": false
         },
         "config": {
-          "type": {
-            "@type": "string",
-            "@value": "aggregation-v1"
-          },
+          "type": "aggregation-v1",
           "query": {
             "@type": "string",
             "@value": "unifi_event_type:\"device.reboot\""
           },
           "query_parameters": [],
+          "filters": [],
           "streams": [
-            {
-              "@type": "string",
-              "@value": "0a57ef15-0a43-565e-b927-1109b7df1d29"
-            }
+            "0a57ef15-0a43-565e-b927-1109b7df1d29"
           ],
+          "stream_categories": [],
           "group_by": [
-            {
-              "@type": "string",
-              "@value": "host_name"
-            }
+            "host_name"
           ],
           "series": [
             {
-              "id": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "function": {
-                "@type": "string",
-                "@value": "count"
-              },
-              "field": {
-                "@type": "string",
-                "@value": ""
-              }
+              "id": "count",
+              "type": "count",
+              "field": null
             }
           ],
           "conditions": {
             "expression": {
-              "expr": {
-                "@type": "string",
-                "@value": ">="
-              },
+              "expr": ">=",
               "left": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number-ref"
-                },
-                "ref": {
-                  "@type": "string",
-                  "@value": "count"
-                }
+                "expr": "number-ref",
+                "ref": "count"
               },
               "right": {
-                "expr": {
-                  "@type": "string",
-                  "@value": "number"
-                },
-                "value": {
-                  "@type": "double",
-                  "@value": 1
-                }
+                "expr": "number",
+                "value": 1
               }
             }
           },
-          "search_within_ms": {
-            "@type": "long",
-            "@value": 60000
-          },
-          "execute_every_ms": {
-            "@type": "long",
-            "@value": 60000
-          }
+          "search_within_ms": 60000,
+          "execute_every_ms": 60000,
+          "use_cron_scheduling": false,
+          "cron_expression": null,
+          "cron_timezone": null,
+          "event_limit": 0
         },
         "field_spec": {},
         "key_spec": [],
         "notification_settings": {
-          "grace_period_ms": {
-            "@type": "long",
-            "@value": 0
-          },
-          "backlog_size": {
-            "@type": "integer",
-            "@value": 0
-          }
+          "grace_period_ms": 0,
+          "backlog_size": 0
         },
         "notifications": [],
         "remediation_steps": {
@@ -2137,7 +1978,7 @@
           "@value": "Review the source message and affected UniFi device."
         },
         "storage": [],
-        "enabled": {
+        "is_scheduled": {
           "@type": "boolean",
           "@value": false
         }
@@ -2157,14 +1998,8 @@
       },
       "id": "8224fc48-f00f-5085-9de6-80a7f808101f",
       "data": {
-        "name": {
-          "@type": "string",
-          "@value": "UNIFI_DEVICE_HEADER"
-        },
-        "pattern": {
-          "@type": "string",
-          "@value": "%{NOTSPACE:host_name} %{UNIFI_MAC12:unifi_device_mac},%{GREEDYDATA:unifi_device_model}-%{UNIFI_VERSION:unifi_device_version}: %{GREEDYDATA:unifi_vendor_message}"
-        }
+        "name": "UNIFI_DEVICE_HEADER",
+        "pattern": "%{NOTSPACE:host_name} %{UNIFI_MAC12:unifi_device_mac},%{GREEDYDATA:unifi_device_model}-%{UNIFI_VERSION:unifi_device_version}: %{GREEDYDATA:unifi_vendor_message}"
       },
       "constraints": [
         {
@@ -2181,14 +2016,8 @@
       },
       "id": "979de00f-f83f-5374-836b-d9c4ed6747df",
       "data": {
-        "name": {
-          "@type": "string",
-          "@value": "UNIFI_MAC12"
-        },
-        "pattern": {
-          "@type": "string",
-          "@value": "[0-9A-Fa-f]{12}"
-        }
+        "name": "UNIFI_MAC12",
+        "pattern": "[0-9A-Fa-f]{12}"
       },
       "constraints": [
         {
@@ -2205,14 +2034,8 @@
       },
       "id": "e3ff70a7-4082-5568-876b-2e9fe0c3b7b9",
       "data": {
-        "name": {
-          "@type": "string",
-          "@value": "UNIFI_VERSION"
-        },
-        "pattern": {
-          "@type": "string",
-          "@value": "\\d+\\.\\d+\\.\\d+\\+\\d+"
-        }
+        "name": "UNIFI_VERSION",
+        "pattern": "\\d+\\.\\d+\\.\\d+\\+\\d+"
       },
       "constraints": [
         {
@@ -3313,7 +3136,8 @@
         "default_stream": {
           "@type": "boolean",
           "@value": false
-        }
+        },
+        "favorite_fields": []
       },
       "constraints": [
         {
@@ -3380,7 +3204,8 @@
         "default_stream": {
           "@type": "boolean",
           "@value": false
-        }
+        },
+        "favorite_fields": []
       },
       "constraints": [
         {
@@ -3469,7 +3294,8 @@
         "default_stream": {
           "@type": "boolean",
           "@value": false
-        }
+        },
+        "favorite_fields": []
       },
       "constraints": [
         {
@@ -3536,7 +3362,8 @@
         "default_stream": {
           "@type": "boolean",
           "@value": false
-        }
+        },
+        "favorite_fields": []
       },
       "constraints": [
         {
@@ -3603,7 +3430,8 @@
         "default_stream": {
           "@type": "boolean",
           "@value": false
-        }
+        },
+        "favorite_fields": []
       },
       "constraints": [
         {
