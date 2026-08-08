@@ -3,7 +3,7 @@ from __future__ import annotations
 from email.message import Message
 from unittest.mock import patch
 
-from scripts.graylog_release_gate import request
+from scripts.graylog_release_gate import import_pack, request
 
 
 class FakeResponse:
@@ -33,3 +33,13 @@ def test_request_decodes_json_api_response() -> None:
     response = FakeResponse(b'{"total_results": 1}', "application/json")
     with patch("urllib.request.urlopen", return_value=response):
         assert request("http://graylog", "admin", "admin", "GET", "/api/search") == {"total_results": 1}
+
+
+def test_installation_uses_graylog_7_entity_wrapper() -> None:
+    pack = {"id": "pack-id", "rev": 1, "parameters": []}
+    with patch("scripts.graylog_release_gate.request") as api_request:
+        import_pack("http://graylog", "admin", "admin", pack, 1515)
+    installation_body = api_request.call_args_list[1].args[5]
+    assert installation_body == {
+        "entity": {"comment": "Automated 0.1 release gate", "parameters": {}}
+    }

@@ -79,7 +79,12 @@ def import_pack(base: str, user: str, password: str, pack: dict[str, Any], udp_p
         password,
         "POST",
         f"/api/system/content_packs/{pack['id']}/{pack['rev']}/installations",
-        {"comment": "Automated 0.1 release gate", "parameters": parameters},
+        {
+            "entity": {
+                "comment": "Automated 0.1 release gate",
+                "parameters": parameters,
+            }
+        },
     )
 
 
